@@ -11,7 +11,10 @@ struct symtab{
   char value[50];
   int address;
 };
-struct errorTable{};
+struct errorTable{
+  int address;
+  char errorDescription[50];
+};
 struct symtab table[100];
 
 int checkEntry(char *s, int table_index) {
