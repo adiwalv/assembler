@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<math.h>
 struct symtab{
   int table_index;
   char name[150];
@@ -218,16 +217,10 @@ int main() {
     while ( fgets ( line, sizeof line, ip ) != NULL )
       printf("%s",line);
     printf("\n\tSym Table:\n");
-    /**printf("Table Index\tName\t\tSize\tNo of items\tType\tDefined\tValue\t\t\t\t\tAddress\n");
-    for(outer = 0; outer < table_index; outer++) {
-      printf("%d\t\t%s\t\t%d\t%d\t\t%c\t%c\t%s\t\t\t\t\t%d\n",table[outer].table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
-      }**/
     printf("%12s%12s%12s%12s%12s%12s%40s%12s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address");
     for(outer = 0; outer < table_index; outer++) {
       printf("%12d%12s%12d%12d%12c%12c%40s%12d\n",table[outer].table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
-      }
-
-    //printf("\n\nImmediate Code:\n");
+    }
     rewind(ip);
     while ( fgets ( line, sizeof line, ip ) != NULL )
     {
@@ -254,27 +247,15 @@ int main() {
         token1 = strtok(NULL,"\n\t\r ");
         token2 = strtok(token1,", ");
         token3 = strtok(NULL,", ");
-
-        // printf("\nHello %s %s", token2,token3);
         op1 = registerTable(token2);
         op2 = registerTable(token3);
-        //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
         if(op1 < 0 && op2 >= 0) {
            c = checkEntry(token2, table_index);
-           if(c < 0) {
-             fprintf(op,"Not definded variable");
-           } else {
-             fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );
-           }
+           fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );
         }
         else if(op2 < 0 && op1 >= 0) {
-          
-           c = checkEntry(token3, table_index);
-           if(c < 0) {
-             fprintf(op,"Not definded variable");
-           } else {
-             fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
-           } 
+          c = checkEntry(token3, table_index);
+          fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
         }
         else if(op1>=0 && op2>=0) {
           fprintf(op,"\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
@@ -283,47 +264,30 @@ int main() {
       else {
         token1 = strtok(NULL,"\n\t\r ,");
         token2 = strtok(NULL,"\n\t\r ,");
-        //printf("\n%s %s %s %d %d", token,token1, token2, op1, op2);
         if(token2 == NULL) {
-          //printf("Hello!\n");
           c = registerTable(token1);
           if (c < 0) {
             c = checkEntry(token1, table_index);
-            if(c < 0) {
-              printf("Error\n");
-            } else {
               fprintf(op,"\n%s Symtab#%d", token, c);
-            }
+            
           } else {
             fprintf(op,"\n%s Reg#%d", token, c);
           }
         } else {
           op1 = registerTable(token1);
           op2 = registerTable(token2);
-      
-          //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
           if(op1 < 0 && op2 >= 0) {
-            c = checkEntry(token1, table_index);
-            if(c < 0) {
-              printf("Not definded variable1");
-            } else {
-              fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );
-            }
+            c = checkEntry(token1, table_index);           
+            fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );  
           }
           else if(op2 < 0 && op1 >= 0) {
-            
             c = checkEntry(token2, table_index);
-            if(c < 0) {
-              printf("Not definded variable");
-            } else {
-              fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
-            } 
+            fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
           }
           else if(op1>=0 && op2>=0) {
             fprintf(op,"\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
           }
-         
-          }
+        }
       }
     }
     fclose(ip);
