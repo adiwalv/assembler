@@ -14,7 +14,8 @@ struct symtab{
 
 struct errorTable{
   int address;
-  int errorType;;
+  int errorType;
+  int symTab_index;
 };
 
 char errorTypes[2][50] = {"Variable not defined!","Multiple definition of Variable"};
@@ -50,7 +51,7 @@ int registerTable(char *s){
 
 int main() { 
   char line[150], *token, *token1, *token2, *token3;
-  int outer, address = 0, sym_table_index=0, count=0,c;
+  int outer, address = 0, sym_table_index=0, count=0, error_table_index = 0, c;
   int op1,op2;
   static const char input[] = "program.asm";
   static const char immediate_output[] = "immediate.asm";
@@ -311,8 +312,15 @@ int main() {
     
     for(outer = 0; outer < sym_table_index; outer++) {
       if(table[outer].defined == 'u') {
-        
+        errors[error_table_index].address = table[outer].address;
+        errors[error_table_index].errorType = 0;
+        errors[error_table_index].symTab_index = outer;
+        error_table_index++;
       }
+    }
+    //printf("%s",errorTypes[errors[0].errorType]);
+    for(outer = 0; outer < error_table_index; outer++) {
+      printf("\nLine %d : %s %s",errors[outer].address,table[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
     }
   } else {
     perror(input);
