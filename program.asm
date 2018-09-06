@@ -1,6 +1,7 @@
 	section .bss
 	z resb 10
 	f resd 2
+	f resb 3
 section .data
 	a db "hello",10,10,10,10,10,10,0	
 	c db "jj",10,10,0		

@@ -104,16 +104,51 @@ int main() {
 	  }
 	  table[sym_table_index].no_of_items = count;
 	  table[sym_table_index].size = 1 * table[sym_table_index].no_of_items;
-	  table[sym_table_index].address = address + table[sym_table_index-1].size;
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
 	  table[sym_table_index].defined = 'd';
 	  table[sym_table_index].type = 's';
           table[sym_table_index].sym_table_index = sym_table_index;
 	}
 	token = strtok(NULL,"\n\t\r");
       }
-      } else {
-        printf("Hello:%d",address);
-      }
+      } else {   
+      strcpy(table[sym_table_index].name,token);
+      token = strtok(NULL, "\n\t\r ");
+      while(token) {
+	if(strcmp(token,"dd") == 0) {
+	  token = strtok(NULL,"\n\t\r ");
+	  count = 0;
+	  strcpy(table[sym_table_index].value,token);
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  token1 = strtok(token,",");
+	  while(token1) {
+	    token1 = strtok(NULL,",");
+	    count++;
+	  }
+	  table[sym_table_index].no_of_items = count;
+	  table[sym_table_index].size = 4 * table[sym_table_index].no_of_items;
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].type = 's';
+	} else if(strcmp(token,"db") == 0) {
+	  count = 0;
+	  token = strtok(NULL,"\n\t\r ");
+	  strcpy(table[sym_table_index].value,token);
+	  token1 = strtok(token,",");
+	  count = strlen(token) - 3;
+	  while(token1) {
+	    token1 = strtok(NULL,",");
+	    count++;
+	  }
+	  table[sym_table_index].no_of_items = count;
+	  table[sym_table_index].size = 1 * table[sym_table_index].no_of_items;
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].type = 's';
+          table[sym_table_index].sym_table_index = sym_table_index;
+	}
+	token = strtok(NULL,"\n\t\r");
+      }}
       address++;
       sym_table_index++;
     }
@@ -133,6 +168,8 @@ int main() {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
+       c = checkEntry(token,sym_table_index);
+      if (c < 0) {
       strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
       while(token) {
@@ -156,6 +193,32 @@ int main() {
 	  table[sym_table_index].type = 's';
 	}
 	token = strtok(NULL,"\n\t\r");
+      }
+      }else {
+	 strcpy(table[sym_table_index].name,token);
+      token = strtok(NULL, "\n\t\r ");
+      while(token) {
+	if(strcmp(token,"resb") == 0) {
+	  token = strtok(NULL,"\n\t\r ");
+	  strcpy(table[sym_table_index].value,token);
+	  table[sym_table_index].no_of_items = 0;
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  table[sym_table_index].size = 1 * atoi(token);
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].type = 's';
+	} else if(strcmp(token,"resd") == 0) {
+	  token = strtok(NULL,"\n\t\r ");
+	  strcpy(table[sym_table_index].value,token);
+	  table[sym_table_index].no_of_items = atoi(token);
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  table[sym_table_index].size = 4 * atoi(token);
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].type = 's';
+	}
+	token = strtok(NULL,"\n\t\r");
+      }
       }
       sym_table_index++;
       address++;
@@ -222,7 +285,6 @@ int main() {
         } 
       }
     }
-    table[0].address = 0;
     rewind(ip);
     address = 0;
     while ( fgets ( line, sizeof line, ip ) != NULL )
@@ -420,6 +482,12 @@ int main() {
       if(table[outer].defined == 'u') {
         errors[error_table_index].address = table[outer].address;
         errors[error_table_index].errorType = 0;
+        errors[error_table_index].symTab_index = outer;
+        error_table_index++;
+      }
+      if(table[outer].defined == 'm') {
+        errors[error_table_index].address = table[outer].address;
+        errors[error_table_index].errorType = 1;
         errors[error_table_index].symTab_index = outer;
         error_table_index++;
       }
