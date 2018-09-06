@@ -66,11 +66,14 @@ int main() {
 	  break;
 	}	
       }
+      address++;
     }
     while(fgets(line, sizeof line, ip) != NULL) {     
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
+      c = checkEntry(token,sym_table_index);
+      if (c < 0) {
       strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
       while(token) {
@@ -108,10 +111,14 @@ int main() {
 	}
 	token = strtok(NULL,"\n\t\r");
       }
+      } else {
+        printf("Hello:%d",address);
+      }
+      address++;
       sym_table_index++;
     }
     rewind(ip);
-    
+    address=0;
     while(fgets(line, sizeof line, ip ) != NULL ) {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0) {
@@ -120,6 +127,7 @@ int main() {
 	  break;
 	}	
       }
+      address++;
     }
     while(fgets(line, sizeof line, ip) != NULL) {
       token = strtok(line,"\n\t\r ");
@@ -150,6 +158,7 @@ int main() {
 	token = strtok(NULL,"\n\t\r");
       }
       sym_table_index++;
+      address++;
     }
     rewind(ip);
     address = 0;

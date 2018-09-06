@@ -5,7 +5,9 @@ section .data
 	a db "hello",10,10,10,10,10,10,0	
 	c db "jj",10,10,0		
 	b dd 10,20
+	b db "ad",10,0
 	t dd 10,12,34,5
+	a db "hel",10,0
 	section .text
 	global main,printf,scanf,zzz
 main:	mov eax,t
