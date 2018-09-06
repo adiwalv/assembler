@@ -28,22 +28,23 @@ int checkEntry(char *s, int table_index) {
 }
 int registerTable(char *s){
   if(strcmp(s,"eax") == 0)
-    return 000;
+    return 0;
   if(strcmp(s,"ecx") == 0)
-    return 001;
+    return 1;
   if(strcmp(s,"edx") == 0)
-    return 010;
+    return 2;
   if(strcmp(s,"ebx") == 0)
-    return 011;
+    return 3;
   if(strcmp(s,"esi") == 0)
-    return 100;
+    return 4;
   if(strcmp(s,"edi") == 0)
-    return 101;
+    return 5;
   return -1;
 }
 int main() { 
-  char line[150], *token, *token1;
-  int outer, address = 0, table_index=0, count=0;
+  char line[150], *token, *token1, *token2, *token3;
+  int outer, address = 0, table_index=0, count=0,c;
+  int op1,op2;
   static const char input[] = "program.asm";
   FILE *fp = fopen(input,"r");
   
@@ -173,7 +174,7 @@ int main() {
       }
       if (strcmp(&token[strlen(token)-1],":") == 0) {
 	token[strlen(token)-1] = '\0';
-        int c = checkEntry(token,table_index);
+        c = checkEntry(token,table_index);
         if(c < 0){
         table[table_index].table_index = table_index;
 	strcpy(table[table_index].name,token);
@@ -208,6 +209,59 @@ int main() {
     printf("Table Index\tName\tSize\tNo of items\tType\tDefined\tValue\t\t\t\tAddress\n");
     for(outer = 0; outer < table_index; outer++) {
       printf("%d\t\t%s\t%d\t%d\t\t%c\t%c\t%s\t\t\t\t%d\n",table[outer].table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
+    }
+    
+    rewind(fp);
+    while ( fgets ( line, sizeof line, fp ) != NULL )
+    {
+      token = strtok(line,"\n\t\r ");
+      if(strcmp(token,"section") == 0) {
+	token = strtok(NULL,"\n\t\r ");
+	if(strcmp(token,".text") == 0) {
+          break;
+	}	
+      }
+    }
+    while ( fgets ( line, sizeof line, fp ) != NULL )
+    {
+      token = strtok(line,"\n\t\r ");
+      if(strcmp(token,"global") == 0) {
+          break;
+	}
+    }
+    while ( fgets ( line, sizeof line, fp ) != NULL )
+    {
+      token = strtok(line,"\n\t\r ");
+      if (strcmp(&token[strlen(token)-1],":") == 0) {
+        token = strtok(NULL,"\n\t\r ");
+        token1 = strtok(NULL,"\n\t\r ");
+        //printf("%s \t %s \n",token,token1);
+        //token1 = strtok(NULL,"\n\t\r ");
+        token2 = strtok(token1,",");
+        token3 = strtok(NULL,",");
+        op1 = registerTable(token2);
+        op2 = registerTable(token3);
+        if(op1 < 0) {
+           c = checkEntry(token2, table_index);
+           if(c < 0) {
+             printf("Not definded variable");
+           } else {
+             printf("%s SysTab#%d , Reg#%d ",token, c , op2 );
+           }
+        }
+        if(op2 < 0){
+           c = checkEntry(token3, table_index);
+           if(c < 0) {
+             printf("Not definded variable");
+           } else {
+             printf("%s Reg#%d , SysTab#%d ",token, op1 , c );
+           } 
+        }
+      }
+      else {
+        token = strtok(NULL, "\n\t\r ");
+        //printf("hello %s", token);
+      }
     }
     
     //printf("\n%d",no_of_lines);

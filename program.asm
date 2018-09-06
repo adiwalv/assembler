@@ -8,7 +8,7 @@ section .data
 	t dd 10,12,34,5
 	section .text
 	global main,printf,scanf
-main:	mov eax,a
+main:	mov eax,t
 pqr:	add eax,ebx
 	jmp pqr
 	jmp asd
