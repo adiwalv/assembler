@@ -2,7 +2,7 @@
 	z resb 10
 	f resd 2
 section .data
-	a db "hello",10,10,10,0	
+	a db "hello",10,10,10,10,10,10,0	
 	c db "jj",10,10,0		
 	b dd 10,20
 	t dd 10,12,34,5
