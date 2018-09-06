@@ -129,7 +129,11 @@ int main() {
 	  table[sym_table_index].size = 4 * table[sym_table_index].no_of_items;
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
 	  table[sym_table_index].defined = 'm';
-	  table[sym_table_index].type = 's';
+          errors[error_table_index].address = address+2;
+          errors[error_table_index].errorType = 1;
+          errors[error_table_index].symTab_index = sym_table_index;;
+          error_table_index++;
+          table[sym_table_index].type = 's';
 	} else if(strcmp(token,"db") == 0) {
 	  count = 0;
 	  token = strtok(NULL,"\n\t\r ");
@@ -144,6 +148,10 @@ int main() {
 	  table[sym_table_index].size = 1 * table[sym_table_index].no_of_items;
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
 	  table[sym_table_index].defined = 'm';
+          errors[error_table_index].address = address+2;
+          errors[error_table_index].errorType = 1;
+          errors[error_table_index].symTab_index = sym_table_index;;
+          error_table_index++;
 	  table[sym_table_index].type = 's';
           table[sym_table_index].sym_table_index = sym_table_index;
 	}
@@ -206,6 +214,10 @@ int main() {
 	  table[sym_table_index].size = 1 * atoi(token);
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
 	  table[sym_table_index].defined = 'm';
+           errors[error_table_index].address = address+2;
+          errors[error_table_index].errorType = 1;
+          errors[error_table_index].symTab_index = sym_table_index;;
+          error_table_index++;
 	  table[sym_table_index].type = 's';
 	} else if(strcmp(token,"resd") == 0) {
 	  token = strtok(NULL,"\n\t\r ");
@@ -215,6 +227,10 @@ int main() {
 	  table[sym_table_index].size = 4 * atoi(token);
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
 	  table[sym_table_index].defined = 'm';
+          errors[error_table_index].address = address+2;
+          errors[error_table_index].errorType = 1;
+          errors[error_table_index].symTab_index = sym_table_index;;
+          error_table_index++;
 	  table[sym_table_index].type = 's';
 	}
 	token = strtok(NULL,"\n\t\r");
@@ -482,12 +498,6 @@ int main() {
       if(table[outer].defined == 'u') {
         errors[error_table_index].address = table[outer].address;
         errors[error_table_index].errorType = 0;
-        errors[error_table_index].symTab_index = outer;
-        error_table_index++;
-      }
-      if(table[outer].defined == 'm') {
-        errors[error_table_index].address = table[outer].address;
-        errors[error_table_index].errorType = 1;
         errors[error_table_index].symTab_index = outer;
         error_table_index++;
       }
