@@ -9,10 +9,13 @@ section .data
 	section .text
 	global main,printf,scanf,zzz
 main:	mov eax,t
-pqr:	add edx,ebx
-qwr:	mov t,eax
+pqr:	mov ecx,xzy
+	add edx,ebx
+qwr:	mov to,o	
 	add edi,esi
 	mov a,ecx
+	mov m,t
+	mov ecx,tmp
 	jmp z
 ppp:	jmp pqr
 	jmp asd
