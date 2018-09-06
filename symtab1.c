@@ -210,7 +210,8 @@ int main() {
     for(outer = 0; outer < table_index; outer++) {
       printf("%d\t\t%s\t%d\t%d\t\t%c\t%c\t%s\t\t\t\t%d\n",table[outer].table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
     }
-    
+
+    printf("\n\nImmediate Code:\n");
     rewind(fp);
     while ( fgets ( line, sizeof line, fp ) != NULL )
     {
@@ -237,8 +238,8 @@ int main() {
         token1 = strtok(NULL,"\n\t\r ");
         //printf("%s \t %s \n",token,token1);
         //token1 = strtok(NULL,"\n\t\r ");
-        token2 = strtok(token1,",");
-        token3 = strtok(NULL,",");
+        token2 = strtok(token1,", ");
+        token3 = strtok(NULL,", ");
         op1 = registerTable(token2);
         op2 = registerTable(token3);
         //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
@@ -264,15 +265,53 @@ int main() {
           }
       }
       else {
-        token = strtok(NULL, "\n\t\r ");
-        //printf("\n\nhello %s", token);
-        
+        token1 = strtok(NULL,"\n\t\r ,");
+        token2 = strtok(NULL,"\n\t\r ,");
+        //printf("\n%s %s %s", token,token1, token2);
+        if(token2 == NULL) {
+          //printf("Hello!\n");
+          c = registerTable(token1);
+          if (c < 0) {
+            c = checkEntry(token1, table_index);
+            if(c < 0) {
+              printf("Error\n");
+            } else {
+              printf("\n%s Symtab#%d", token, c);
+            }
+          } else {
+              printf("\n%s Reg#%d", token, c);
+          }
+        } else {
+          op1 = registerTable(token2);
+          op2 = registerTable(token3);
+          //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
+          if(op1 < 0 && op2 >= 0) {
+            c = checkEntry(token2, table_index);
+            if(c < 0) {
+              printf("Not definded variable");
+            } else {
+              printf("\n%s SysTab#%d , Reg#%d ",token, c , op2 );
+            }
+          }
+          else if(op2 < 0 && op1 >= 0) {
+            
+            c = checkEntry(token3, table_index);
+            if(c < 0) {
+              printf("Not definded variable");
+            } else {
+              printf("\n%s Reg#%d , SysTab#%d ",token, op1 , c );
+            } 
+          }
+          else if(op1>=0 && op2>=0) {
+            printf("\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
+          }
+         
+        }
       }
+      
     }
-    
-    //printf("\n%d",no_of_lines);
   } else {
-      perror(input);
-   }
+    perror(input);
+  }
   return 0;
 }
