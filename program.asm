@@ -10,7 +10,10 @@ section .data
 	global main,printf,scanf
 main:	mov eax,t
 pqr:	add edx,ebx
-	mov a, ecx
+qwr:	mov t,eax
+	add edi,esi
+	mov a,ecx
 	jmp z
 	jmp pqr
 	jmp asd
+	jmp qwr	

@@ -236,10 +236,10 @@ int main() {
       if (strcmp(&token[strlen(token)-1],":") == 0) {
         token = strtok(NULL,"\n\t\r ");
         token1 = strtok(NULL,"\n\t\r ");
-        //printf("%s \t %s \n",token,token1);
-        //token1 = strtok(NULL,"\n\t\r ");
         token2 = strtok(token1,", ");
         token3 = strtok(NULL,", ");
+
+        // printf("\nHello %s %s", token2,token3);
         op1 = registerTable(token2);
         op2 = registerTable(token3);
         //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
@@ -267,7 +267,7 @@ int main() {
       else {
         token1 = strtok(NULL,"\n\t\r ,");
         token2 = strtok(NULL,"\n\t\r ,");
-        //printf("\n%s %s %s", token,token1, token2);
+        //printf("\n%s %s %s %d %d", token,token1, token2, op1, op2);
         if(token2 == NULL) {
           //printf("Hello!\n");
           c = registerTable(token1);
@@ -282,20 +282,21 @@ int main() {
               printf("\n%s Reg#%d", token, c);
           }
         } else {
-          op1 = registerTable(token2);
-          op2 = registerTable(token3);
+          op1 = registerTable(token1);
+          op2 = registerTable(token2);
+      
           //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
           if(op1 < 0 && op2 >= 0) {
-            c = checkEntry(token2, table_index);
+            c = checkEntry(token1, table_index);
             if(c < 0) {
-              printf("Not definded variable");
+              printf("Not definded variable1");
             } else {
               printf("\n%s SysTab#%d , Reg#%d ",token, c , op2 );
             }
           }
           else if(op2 < 0 && op1 >= 0) {
             
-            c = checkEntry(token3, table_index);
+            c = checkEntry(token2, table_index);
             if(c < 0) {
               printf("Not definded variable");
             } else {
@@ -306,9 +307,8 @@ int main() {
             printf("\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
           }
          
-        }
+          }
       }
-      
     }
   } else {
     perror(input);
