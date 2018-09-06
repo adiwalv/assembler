@@ -9,6 +9,6 @@ section .data
 	section .text
 	global main,printf,scanf
 main:	mov eax,t
-pqr:	add eax,ebx
+pqr:	add edx,ebx
 	jmp pqr
 	jmp asd

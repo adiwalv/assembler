@@ -241,26 +241,32 @@ int main() {
         token3 = strtok(NULL,",");
         op1 = registerTable(token2);
         op2 = registerTable(token3);
-        if(op1 < 0) {
+        //printf("\n\n%s %s %d %d",token2,token3,op1,op2);
+        if(op1 < 0 && op2 >= 0) {
            c = checkEntry(token2, table_index);
            if(c < 0) {
              printf("Not definded variable");
            } else {
-             printf("%s SysTab#%d , Reg#%d ",token, c , op2 );
+             printf("\n%s SysTab#%d , Reg#%d ",token, c , op2 );
            }
         }
-        if(op2 < 0){
+        else if(op2 < 0 && op1 >= 0) {
+          
            c = checkEntry(token3, table_index);
            if(c < 0) {
              printf("Not definded variable");
            } else {
-             printf("%s Reg#%d , SysTab#%d ",token, op1 , c );
+             printf("\n%s Reg#%d , SysTab#%d ",token, op1 , c );
            } 
         }
+        else if(op1>=0 && op2>=0) {
+          printf("\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
+          }
       }
       else {
         token = strtok(NULL, "\n\t\r ");
-        //printf("hello %s", token);
+        //printf("\n\nhello %s", token);
+        
       }
     }
     
