@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 struct symtab{
-  int table_index;
+  int sym_table_index;
   char name[150];
   int size;
   int no_of_items;
@@ -22,9 +22,9 @@ char errorTypes[2][50] = {"Variable not defined!","Multiple definition of Variab
 struct symtab table[100];
 struct errorTable errors[100];
 
-int checkEntry(char *s, int table_index) {
+int checkEntry(char *s, int sym_table_index) {
   int i = 0;
-  for(i = 0; i < table_index; i++){
+  for(i = 0; i < sym_table_index; i++){
     if(strcmp(table[i].name,s) == 0) {
       return i;
     }
@@ -50,7 +50,7 @@ int registerTable(char *s){
 
 int main() { 
   char line[150], *token, *token1, *token2, *token3;
-  int outer, address = 0, table_index=0, count=0,c;
+  int outer, address = 0, sym_table_index=0, count=0,c;
   int op1,op2;
   static const char input[] = "program.asm";
   static const char immediate_output[] = "immediate.asm";
@@ -70,44 +70,44 @@ int main() {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
-      strcpy(table[table_index].name,token);
+      strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
       while(token) {
 	if(strcmp(token,"dd") == 0) {
 	  token = strtok(NULL,"\n\t\r ");
 	  count = 0;
-	  strcpy(table[table_index].value,token);
-          table[table_index].table_index = table_index;
+	  strcpy(table[sym_table_index].value,token);
+          table[sym_table_index].sym_table_index = sym_table_index;
 	  token1 = strtok(token,",");
 	  while(token1) {
 	    token1 = strtok(NULL,",");
 	    count++;
 	  }
-	  table[table_index].no_of_items = count;
-	  table[table_index].size = 4 * table[table_index].no_of_items;
-	  table[table_index].address = table[table_index-1].address + table[table_index-1].size;
-	  table[table_index].defined = 'd';
-	  table[table_index].type = 's';
+	  table[sym_table_index].no_of_items = count;
+	  table[sym_table_index].size = 4 * table[sym_table_index].no_of_items;
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'd';
+	  table[sym_table_index].type = 's';
 	} else if(strcmp(token,"db") == 0) {
 	  count = 0;
 	  token = strtok(NULL,"\n\t\r ");
-	  strcpy(table[table_index].value,token);
+	  strcpy(table[sym_table_index].value,token);
 	  token1 = strtok(token,",");
 	  count = strlen(token) - 3;
 	  while(token1) {
 	    token1 = strtok(NULL,",");
 	    count++;
 	  }
-	  table[table_index].no_of_items = count;
-	  table[table_index].size = 1 * table[table_index].no_of_items;
-	  table[table_index].address = address + table[table_index-1].size;
-	  table[table_index].defined = 'd';
-	  table[table_index].type = 's';
-          table[table_index].table_index = table_index;
+	  table[sym_table_index].no_of_items = count;
+	  table[sym_table_index].size = 1 * table[sym_table_index].no_of_items;
+	  table[sym_table_index].address = address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'd';
+	  table[sym_table_index].type = 's';
+          table[sym_table_index].sym_table_index = sym_table_index;
 	}
 	token = strtok(NULL,"\n\t\r");
       }
-      table_index++;
+      sym_table_index++;
     }
     rewind(ip);
     
@@ -124,31 +124,31 @@ int main() {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
-      strcpy(table[table_index].name,token);
+      strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
       while(token) {
 	if(strcmp(token,"resb") == 0) {
 	  token = strtok(NULL,"\n\t\r ");
-	  strcpy(table[table_index].value,token);
-	  table[table_index].no_of_items = 0;
-          table[table_index].table_index = table_index;
-	  table[table_index].size = 1 * atoi(token);
-	  table[table_index].address = table[table_index-1].address + table[table_index-1].size;
-	  table[table_index].defined = 'd';
-	  table[table_index].type = 's';
+	  strcpy(table[sym_table_index].value,token);
+	  table[sym_table_index].no_of_items = 0;
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  table[sym_table_index].size = 1 * atoi(token);
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'd';
+	  table[sym_table_index].type = 's';
 	} else if(strcmp(token,"resd") == 0) {
 	  token = strtok(NULL,"\n\t\r ");
-	  strcpy(table[table_index].value,token);
-	  table[table_index].no_of_items = atoi(token);
-          table[table_index].table_index = table_index;
-	  table[table_index].size = 4 * atoi(token);
-	  table[table_index].address = table[table_index-1].address + table[table_index-1].size;
-	  table[table_index].defined = 'd';
-	  table[table_index].type = 's';
+	  strcpy(table[sym_table_index].value,token);
+	  table[sym_table_index].no_of_items = atoi(token);
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  table[sym_table_index].size = 4 * atoi(token);
+	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
+	  table[sym_table_index].defined = 'd';
+	  table[sym_table_index].type = 's';
 	}
 	token = strtok(NULL,"\n\t\r");
       }
-      table_index++;
+      sym_table_index++;
     }
     rewind(ip);
     address = 0;
@@ -172,26 +172,27 @@ int main() {
 	token = strtok(NULL,"\n\t\r ");
 	token1 = strtok(token,",");
 	while(token1) {
-	  strcpy(table[table_index].name,token1);
-	  table[table_index].defined = 'u';
-	  table[table_index].type = 'l';
-          strcpy(table[table_index].value,"***");
-          table[table_index].table_index = table_index;
-	  table_index++;
+	  strcpy(table[sym_table_index].name,token1);
+	  table[sym_table_index].defined = 'u';
+          table[sym_table_index].address = address;
+	  table[sym_table_index].type = 'l';
+          strcpy(table[sym_table_index].value,"***");
+          table[sym_table_index].sym_table_index = sym_table_index;
+	  sym_table_index++;
 	  token1 = strtok(NULL,",");
 	}
       }
       if (strcmp(&token[strlen(token)-1],":") == 0) {
 	token[strlen(token)-1] = '\0';
-        c = checkEntry(token,table_index);
+        c = checkEntry(token,sym_table_index);
         if(c < 0){
-        table[table_index].table_index = table_index;
-	strcpy(table[table_index].name,token);
-	table[table_index].defined = 'd';
-	table[table_index].type = 'l';
-        strcpy(table[table_index].value,"***");
-	table[table_index].address = address;
-	table_index++;}
+        table[sym_table_index].sym_table_index = sym_table_index;
+	strcpy(table[sym_table_index].name,token);
+	table[sym_table_index].defined = 'd';
+	table[sym_table_index].type = 'l';
+        strcpy(table[sym_table_index].value,"***");
+	table[sym_table_index].address = address;
+	sym_table_index++;}
         else {
           table[c].defined = 'd';
           table[c].address = address;
@@ -199,15 +200,15 @@ int main() {
       }
       if(strcmp(token,"jmp") == 0){
         token = strtok(NULL,"\n\t\r ");
-        int c = checkEntry(token,table_index);
+        int c = checkEntry(token,sym_table_index);
         if(c < 0) {
-        table[table_index].table_index = table_index;
-	strcpy(table[table_index].name,token);
-	table[table_index].defined = 'u';
-	table[table_index].type = 'l';
-        strcpy(table[table_index].value,"***");
-	table[table_index].address = address;
-	table_index++;
+        table[sym_table_index].sym_table_index = sym_table_index;
+	strcpy(table[sym_table_index].name,token);
+	table[sym_table_index].defined = 'u';
+	table[sym_table_index].type = 'l';
+        strcpy(table[sym_table_index].value,"***");
+	table[sym_table_index].address = address;
+	sym_table_index++;
         } 
       }
     }
@@ -218,8 +219,8 @@ int main() {
       printf("%s",line);
     printf("\n\tSym Table:\n");
     printf("%12s%12s%12s%12s%12s%12s%40s%12s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address");
-    for(outer = 0; outer < table_index; outer++) {
-      printf("%12d%12s%12d%12d%12c%12c%40s%12d\n",table[outer].table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
+    for(outer = 0; outer < sym_table_index; outer++) {
+      printf("%12d%12s%12d%12d%12c%12c%40s%12d\n",table[outer].sym_table_index,table[outer].name,table[outer].size,table[outer].no_of_items,table[outer].type,table[outer].defined,table[outer].value,table[outer].address);  
     }
     rewind(ip);
     while ( fgets ( line, sizeof line, ip ) != NULL )
@@ -247,19 +248,30 @@ int main() {
         token1 = strtok(NULL,"\n\t\r ");
         token2 = strtok(token1,", ");
         token3 = strtok(NULL,", ");
+         if(token3 == NULL) {
+          c = registerTable(token2);
+          if (c < 0) {
+            c = checkEntry(token1, sym_table_index);
+              fprintf(op,"\n%s Symtab#%d", token, c);
+            
+          } else {
+            fprintf(op,"\n%s Reg#%d", token, c);
+          }
+        } else {
         op1 = registerTable(token2);
         op2 = registerTable(token3);
         if(op1 < 0 && op2 >= 0) {
-           c = checkEntry(token2, table_index);
+           c = checkEntry(token2, sym_table_index);
            fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );
         }
         else if(op2 < 0 && op1 >= 0) {
-          c = checkEntry(token3, table_index);
+          c = checkEntry(token3, sym_table_index);
           fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
         }
         else if(op1>=0 && op2>=0) {
           fprintf(op,"\n%s Reg#%d , Reg#%d ",token, op1 , op2 );
-          }
+        }
+        }
       }
       else {
         token1 = strtok(NULL,"\n\t\r ,");
@@ -267,7 +279,7 @@ int main() {
         if(token2 == NULL) {
           c = registerTable(token1);
           if (c < 0) {
-            c = checkEntry(token1, table_index);
+            c = checkEntry(token1, sym_table_index);
               fprintf(op,"\n%s Symtab#%d", token, c);
             
           } else {
@@ -277,11 +289,11 @@ int main() {
           op1 = registerTable(token1);
           op2 = registerTable(token2);
           if(op1 < 0 && op2 >= 0) {
-            c = checkEntry(token1, table_index);           
+            c = checkEntry(token1, sym_table_index);           
             fprintf(op,"\n%s SysTab#%d , Reg#%d ",token, c , op2 );  
           }
           else if(op2 < 0 && op1 >= 0) {
-            c = checkEntry(token2, table_index);
+            c = checkEntry(token2, sym_table_index);
             fprintf(op,"\n%s Reg#%d , SysTab#%d ",token, op1 , c );
           }
           else if(op1>=0 && op2>=0) {
@@ -296,6 +308,12 @@ int main() {
     printf("\n\nImmediate Code from the file created:");
     while ( fgets ( line, sizeof line, op ) != NULL )
       printf("%s", line);
+    
+    for(outer = 0; outer < sym_table_index; outer++) {
+      if(table[outer].defined == 'u') {
+        
+      }
+    }
   } else {
     perror(input);
   }

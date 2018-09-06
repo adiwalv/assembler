@@ -7,13 +7,13 @@ section .data
 	b dd 10,20
 	t dd 10,12,34,5
 	section .text
-	global main,printf,scanf
+	global main,printf,scanf,zzz
 main:	mov eax,t
 pqr:	add edx,ebx
 qwr:	mov t,eax
 	add edi,esi
 	mov a,ecx
 	jmp z
-	jmp pqr
+ppp:	jmp pqr
 	jmp asd
 	jmp qwr	
