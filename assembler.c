@@ -72,7 +72,7 @@ int main() {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
-      c = checkEntry(token,sym_table_index); // checks if for entries in the symtable, returns -1 if no entry and symtable index if entry exists
+      c = checkEntry(token,sym_table_index); // checks for entries in the symtable, returns -1 if no entry and symtable index if entry exists
       if (c < 0) {
       strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
