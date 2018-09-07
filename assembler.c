@@ -72,7 +72,7 @@ int main() {
       token = strtok(line,"\n\t\r ");
       if(strcmp(token,"section") == 0)
 	break;
-      c = checkEntry(token,sym_table_index);
+      c = checkEntry(token,sym_table_index); // checks if for entries in the symtable, returns -1 if no entry and symtable index if entry exists
       if (c < 0) {
       strcpy(table[sym_table_index].name,token);
       token = strtok(NULL, "\n\t\r ");
@@ -213,7 +213,7 @@ int main() {
           table[sym_table_index].sym_table_index = sym_table_index;
 	  table[sym_table_index].size = 1 * atoi(token);
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
-	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].defined = 'm'; //giving it a flag m for multiple definitions
            errors[error_table_index].address = address+2;
           errors[error_table_index].errorType = 1;
           errors[error_table_index].symTab_index = sym_table_index;;
@@ -226,7 +226,7 @@ int main() {
           table[sym_table_index].sym_table_index = sym_table_index;
 	  table[sym_table_index].size = 4 * atoi(token);
 	  table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
-	  table[sym_table_index].defined = 'm';
+	  table[sym_table_index].defined = 'm';//giving it a flag m for multiple definitions
           errors[error_table_index].address = address+2;
           errors[error_table_index].errorType = 1;
           errors[error_table_index].symTab_index = sym_table_index;;
