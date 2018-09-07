@@ -15,12 +15,13 @@
 	section .text
 	global main,printf,scanf,zzz
 main:	mov eax,t
-pqr:	mov ecx,xzy
+pqr:	jmp eax
 	add edx,ebx
 qwr:	mov to,o	
 	add edi,esi
 	mov a,ecx
 	jmp js
+ajx:	mov ts,i
 	mov kkkt,ecx
 	mov ecx,tmp
 	jmp z
