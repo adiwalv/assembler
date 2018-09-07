@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<math.h>
 struct symtab{
   int table_index;
   char name[150];
