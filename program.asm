@@ -20,9 +20,10 @@ pqr:	mov ecx,xzy
 qwr:	mov to,o	
 	add edi,esi
 	mov a,ecx
-	mov m,t
+	jmp js
+	mov kkkt,ecx
 	mov ecx,tmp
 	jmp z
-ppp:	jmp pqr
+ppp:	jmp jk
 	jmp asd
 	jmp qwr	

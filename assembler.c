@@ -333,8 +333,18 @@ int main() {
          if(token3 == NULL) {
           c = registerTable(token2);
           if (c < 0) {
-            c = checkEntry(token1, sym_table_index);
-            fprintf(op,"\n%s Symtab#%d", token, c); 
+            c = checkEntry(token2, sym_table_index);
+            if (c < 0)
+            {
+             strcpy(table[sym_table_index].name,token1);
+             table[sym_table_index].defined = 'u';
+             table[sym_table_index].address = address+2;
+             table[sym_table_index].type = 'l';
+             strcpy(table[sym_table_index].value,"***");
+             table[sym_table_index].sym_table_index = sym_table_index;
+             fprintf(op,"\n%s Symtab#%d", token, sym_table_index); 
+            }
+            
           } else {
             fprintf(op,"\n%s Reg#%d", token, c);
           }
@@ -346,7 +356,7 @@ int main() {
            if(c < 0) {
              strcpy(table[sym_table_index].name,token2);
              table[sym_table_index].defined = 'u';
-             table[sym_table_index].address = address;
+             table[sym_table_index].address = address+2;
              table[sym_table_index].type = 'l';
              strcpy(table[sym_table_index].value,"***");
              table[sym_table_index].sym_table_index = sym_table_index;
@@ -362,7 +372,8 @@ int main() {
            if(c < 0) {
              strcpy(table[sym_table_index].name,token3);
              table[sym_table_index].defined = 'u';
-             table[sym_table_index].address = address;
+             table[sym_table_index].address = address+2;
+             //printf("Hell121221");
              table[sym_table_index].type = 'l';
              strcpy(table[sym_table_index].value,"***");
              table[sym_table_index].sym_table_index = sym_table_index;
@@ -381,7 +392,7 @@ int main() {
             if( c< 0) {
              strcpy(table[sym_table_index].name,token3);
              table[sym_table_index].defined = 'u';
-             table[sym_table_index].address = address;
+             table[sym_table_index].address = address+2;
              table[sym_table_index].type = 'l';
              strcpy(table[sym_table_index].value,"***");
              table[sym_table_index].sym_table_index = sym_table_index;
@@ -390,7 +401,7 @@ int main() {
             if(c < 0) {
              strcpy(table[sym_table_index].name,token2);
              table[sym_table_index].defined = 'u';
-             table[sym_table_index].address = address;
+             table[sym_table_index].address = address+2;
              table[sym_table_index].type = 'l';
              strcpy(table[sym_table_index].value,"***");
              table[sym_table_index].sym_table_index = sym_table_index;
@@ -398,8 +409,9 @@ int main() {
             }
             fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token2,sym_table_index), checkEntry(token3,sym_table_index));
              
-        } // memory to memory not allowed but will require this to fill symtable
+        } 
          }
+         address++;
       }
       else {
         token1 = strtok(NULL,"\n\t\r ,");
@@ -408,7 +420,16 @@ int main() {
           c = registerTable(token1);
           if (c < 0) {
             c = checkEntry(token1, sym_table_index);
-              fprintf(op,"\n%s Symtab#%d", token, c);
+            if (c < 0)
+            {
+             strcpy(table[sym_table_index].name,token1);
+             table[sym_table_index].defined = 'u';
+             table[sym_table_index].address = address;
+             table[sym_table_index].type = 'l';
+             strcpy(table[sym_table_index].value,"***");
+             table[sym_table_index].sym_table_index = sym_table_index;
+             fprintf(op,"\n%s Symtab#%d", token, sym_table_index); 
+            }
             
           } else {
             fprintf(op,"\n%s Reg#%d", token, c);
