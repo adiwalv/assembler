@@ -49,12 +49,13 @@ int registerTable(char *s){
   return -1;
 }
 
-int main() { 
+int main(int argc, char *argv[]) { 
   char line[150], *token, *token1, *token2, *token3;
   int outer, address = 0, sym_table_index=0, count=0, error_table_index = 0, c;
   int op1,op2;
   static const char input[] = "program.asm";
   static const char immediate_output[] = "immediate.asm";
+ 
   FILE *ip = fopen(input,"r");
   FILE *op = fopen(immediate_output,"w");
   if(ip!=NULL){
