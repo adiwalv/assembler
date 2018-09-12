@@ -537,7 +537,7 @@ int main(int argc, char *argv[]) {
       return 0;
   }
   else if( argc > 2 ) {
-    printf("At this moment this assembler can only work with one file at a time..\n");
+    printf("At the moment this assembler can only work with one .asm source file at a time..\n");
   }
   else {
     printf("One argument expected.\n");
