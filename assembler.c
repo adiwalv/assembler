@@ -23,6 +23,24 @@ char errorTypes[2][50] = {"Variable not defined!","Multiple definition of Variab
 struct symtab table[100];
 struct errorTable errors[100];
 
+char* convertToHex(char* str,char *strH) {
+  unsigned long i;
+  //printf("%s",*str);
+  memset(strH,0,strlen(strH));
+  for(i = 0; i < strlen(str); i++) {
+    sprintf((char*)strH+i*2,"%02X",str[i]);
+  }
+  //printf("Hex is %s",strH);
+  return strH;
+}
+
+char* extract_quoted_string(char *substring, char *token1) {
+  substring[0] = '\0';
+  char *start = strchr(token1, '"') + 1;
+  strncat(substring, start, strcspn(start, "\""));
+  return substring;
+}
+
 int checkEntry(char *s, int sym_table_index) {
   int i = 0;
   for(i = 0; i < sym_table_index; i++){
@@ -49,7 +67,7 @@ int registerTable(char *s){
   return -1;
 }
 
-int main(int argc, char *argv[]) { 
+int main(int argc, char *argv[]) {
   if( argc == 2 ) {
       char line[150], *token, *token1, *token2, *token3;
       int outer, address = 0, sym_table_index=0, count=0, error_table_index = 0, c;
@@ -97,13 +115,27 @@ int main(int argc, char *argv[]) {
               } else if(strcmp(token,"db") == 0) {
                 count = 0;
                 token = strtok(NULL,"\n\t\r ");
-                strcpy(table[sym_table_index].value,token);
                 token1 = strtok(token,",");
-                count = strlen(token) - 3;
+                char *substring = (char*)malloc(sizeof(char) * 100);
+                substring = extract_quoted_string(substring,token1);
+                count = strlen(substring);
+                strcpy(table[sym_table_index].value,substring);                
+                token1 = strtok(NULL,","); 
                 while(token1) {
+                  if(strcmp(token1,"10") == 0) {
+                    strcpy(substring,"\\n");
+                  }
+                  if(strcmp(token1,"0") == 0) {
+                    strcpy(substring,"\\0");
+                  }
+                  strcat(table[sym_table_index].value,substring);
                   token1 = strtok(NULL,",");
                   count++;
                 }
+                printf("Before :%s -- >%s\n",substring,table[sym_table_index].value);
+                substring = convertToHex(table[sym_table_index].value,substring);
+                printf("After :%s -- >%s\n",substring,table[sym_table_index].value);
+                free(substring);
                 table[sym_table_index].no_of_items = count;
                 table[sym_table_index].size = 1 * table[sym_table_index].no_of_items;
                 table[sym_table_index].address = table[sym_table_index-1].address + table[sym_table_index-1].size;
@@ -490,7 +522,7 @@ int main(int argc, char *argv[]) {
                 if(c < 0) {
                   strcpy(table[sym_table_index].name,token1);
                   table[sym_table_index].defined = 'u';
-                  table[sym_table_index].address = address;
+                  table[sym_table_index].address = address+3;
                   table[sym_table_index].type = 'l';
                   strcpy(table[sym_table_index].value,"***");
                   table[sym_table_index].sym_table_index = sym_table_index;
