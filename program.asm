@@ -9,9 +9,7 @@
 	section .bss
 	z resb 10
 	f resd 2
-	f resb 3
 	z resd 3
-	f resd 2
 	section .text
 	global main,printf,scanf,zzz
 main:	mov eax,t
