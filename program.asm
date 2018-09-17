@@ -17,14 +17,17 @@
 main:	mov eax,t
 pqr:	jmp eax
 	add edx,ebx
-qwr:	mov to,o	
+	mov to,o	
 	add edi,esi
 	mov a,ecx
 	jmp js
 ajx:	mov ts,i
+	mov ts,10
+	add ebx,200
 	mov kkkt,ecx
 	mov ecx,tmp
 	jmp z
+	jnz tmpasd
 ppp:	jmp jk
 	jmp asd
-	jmp qwr	
+	jmp qwr
