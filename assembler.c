@@ -105,14 +105,15 @@ void fetchSection(char* section, FILE **fp, char *token, int *address){
 }
 
 int populateLiteralTable(int sym_table_index){
-  int index = 0 , lit_table_index = 0;
+  int index = 0 , lit_table_index = 1;
   long array[200];
   char *str;
   long a;
   for(int i = 0; i < sym_table_index; i++) {
     a = strtol(symtable[i].name, &str, 10);
     if(a != 0 ){
-      symtable[i].type = 'i';
+      symtable[i].type = 'I';
+      symtable[i].defined = 'd';
       array[index] = a;
       index++;
       array[index] = i;
@@ -126,6 +127,7 @@ int populateLiteralTable(int sym_table_index){
     sprintf(str,"%X",(unsigned int)array[i]);
     strcpy(littab[lit_table_index].value,str);
     littab[lit_table_index].address = array[i+1];
+    symtable[array[i+1]].literal_table_link = lit_table_index;
     lit_table_index++;
     }
   return lit_table_index;  
@@ -138,7 +140,7 @@ int main(int argc, char *argv[]) {
     char *token1 = (char*)malloc(sizeof(char) * 100);
     char *token2 = (char*)malloc(sizeof(char) * 100);
     char *token3 = (char*)malloc(sizeof(char) * 100);
-    int outer, address = 0, sym_table_index=0, count=0, error_table_index = 0, lit_table_index = 0, check;
+    int outer, address = 0, sym_table_index=1, count=0, error_table_index = 0, lit_table_index = 0, check;
     int op1,op2;
     //static const char input[] = "program.asm";
     static const char immediate_output[] = "immediate.asm";
@@ -569,13 +571,13 @@ int main(int argc, char *argv[]) {
           printf("%s",line);
         printf("\n\tSym Table:\n");
         printf("%12s%12s%12s%12s%12s%12s%30s%10s%18s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
-        for(outer = 0; outer < sym_table_index; outer++) {
+        for(outer = 1; outer < sym_table_index; outer++) {
           printf("%12d%12s%12d%12d%12c%12c%30s%10d%18d\n",symtable[outer].sym_table_index,symtable[outer].name,symtable[outer].size,symtable[outer].no_of_items,symtable[outer].type,symtable[outer].defined,symtable[outer].value,symtable[outer].address,symtable[outer].literal_table_link);  
         }
         
              printf("\n\tLiteral Table:\n");
         printf("%12s%12s%12s\n","Table Index","Value","Address");
-        for(outer = 0; outer < lit_table_index; outer++) {
+        for(outer = 1; outer < lit_table_index; outer++) {
           printf("%12d%12s%12d\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].address);
           }
         printf("\n\nImmediate Code from the file created:");
