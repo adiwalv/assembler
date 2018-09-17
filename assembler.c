@@ -104,8 +104,8 @@ void fetchSection(char* section, FILE **fp, char *token, int *address){
         }
 }
 
-int populateLiteralTable(int sym_table_index, int lit_table_index){
-  int index = 0;
+int populateLiteralTable(int sym_table_index){
+  int index = 0 , lit_table_index = 1;
   long array[200];
   char *str;
   long a;
@@ -176,30 +176,25 @@ int main(int argc, char *argv[]) {
               token = strtok(NULL,"\n\t\r ");
               token1 = strtok(token,",");
               char *substring = (char*)malloc(sizeof(char) * 100);
-              char *str;
               substring = extract_quoted_string(substring,token1);
               count = strlen(substring);
               strcpy(symtable[sym_table_index].value,substring);
-              littab[lit_table_index].lit_table_index = lit_table_index;
+               littab[lit_table_index].lit_table_index = lit_table_index;
               strcpy(littab[lit_table_index].value,convertStringToHex(substring));
               littab[lit_table_index].sym_table_index = sym_table_index;
+
               token1 = strtok(NULL,","); 
               while(token1) {
                 if(strcmp(token1,"10") == 0) {
-                  sprintf(str,"%X",atoi(token1));
-                  strcat(littab[lit_table_index].value,str);
                   strcpy(substring,"\\n");
                 }
                 if(strcmp(token1,"0") == 0) {
-                  sprintf(str,"%X",atoi(token1));
-                  strcat(littab[lit_table_index].value,str);
                   strcpy(substring,"\\0");
                 }
                 strcat(symtable[sym_table_index].value,substring);
                 token1 = strtok(NULL,",");
                 count++;
               }
-              lit_table_index++;
               free(substring);
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
@@ -583,7 +578,7 @@ int main(int argc, char *argv[]) {
         op = fopen(immediate_output,"r");
         //printf("%s",errorTypes[errors[0].errorType]);
         rewind(ip);
-        lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
+        lit_table_index = populateLiteralTable(sym_table_index);
         printf("\tProgram:\n");
         while ( fgets ( line, sizeof line, ip ) != NULL )
           printf("%s",line);
