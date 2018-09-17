@@ -40,23 +40,6 @@ char* convertStringToHex(char* str) {
   return strH;
 }
 
-char* convertDecToHex(int decimalNumber) {
-  long int quotient;
-	int i=1,temp;
-	char *hexadecimalNumber = (char*)malloc(sizeof(char)*100);
-	quotient = decimalNumber;
-	while(quotient!=0) {
-		temp = quotient % 16;
-		//To convert integer into character
-		if( temp < 10)
-		           temp =temp + 48; else
-		         temp = temp + 55;
-		hexadecimalNumber[i++]= temp;
-		quotient = quotient / 16;
-	}
-        return hexadecimalNumber;
-}
-
 char* extract_quoted_string(char *substring, char *token1) {
   substring[0] = '\0';
   char *start = strchr(token1, '"') + 1;
@@ -138,7 +121,7 @@ int main(int argc, char *argv[]) {
     char *token1 = (char*)malloc(sizeof(char) * 100);
     char *token2 = (char*)malloc(sizeof(char) * 100);
     char *token3 = (char*)malloc(sizeof(char) * 100);
-    int outer, address = 0, sym_table_index=1, count=0, error_table_index = 0, lit_table_index = 0, check;
+    int outer, address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
     int op1,op2;
     //static const char input[] = "program.asm";
     static const char immediate_output[] = "immediate.asm";
@@ -159,13 +142,20 @@ int main(int argc, char *argv[]) {
             if(strcmp(token,"dd") == 0) {
               token = strtok(NULL,"\n\t\r ");
               count = 0;
+              int i = 0;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].sym_table_index = sym_table_index;
+
               token1 = strtok(token,",");
-              while(token1) {
+
+
+              char *str1 = (char*)malloc(sizeof(char)*8);
+              bzero(str1,strlen(str1));
+              while(token1 && i < 8) {
                 token1 = strtok(NULL,",");
                 count++;
               }
+              //lit_table_index++;
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
@@ -180,15 +170,17 @@ int main(int argc, char *argv[]) {
               count = strlen(substring);
               strcpy(symtable[sym_table_index].value,substring);
               littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
               strcpy(littab[lit_table_index].value,convertStringToHex(substring));
               littab[lit_table_index].sym_table_index = sym_table_index;
-
               token1 = strtok(NULL,","); 
               while(token1) {
                 if(strcmp(token1,"10") == 0) {
+                  strcat(littab[lit_table_index].value,"0A");
                   strcpy(substring,"\\n");
                 }
                 if(strcmp(token1,"0") == 0) {
+                  strcat(littab[lit_table_index].value,"00");
                   strcpy(substring,"\\0");
                 }
                 strcat(symtable[sym_table_index].value,substring);
@@ -237,17 +229,18 @@ int main(int argc, char *argv[]) {
               substring = extract_quoted_string(substring,token1);
               count = strlen(substring);
               strcpy(symtable[sym_table_index].value,substring);
+              symtable[sym_table_index].literal_table_link = lit_table_index;
               littab[lit_table_index].lit_table_index = lit_table_index;
               strcpy(littab[lit_table_index].value,convertStringToHex(substring));
-              littab[lit_table_index].sym_table_index = sym_table_index;
-
-              
+              littab[lit_table_index].sym_table_index = sym_table_index;              
               token1 = strtok(NULL,","); 
               while(token1) {
                 if(strcmp(token1,"10") == 0) {
+                  strcat(littab[lit_table_index].value,"0A");
                   strcpy(substring,"\\n");
                 }
                 if(strcmp(token1,"0") == 0) {
+                  strcat(littab[lit_table_index].value,"00");
                   strcpy(substring,"\\0");
                 }
                 strcat(symtable[sym_table_index].value,substring);
@@ -599,19 +592,19 @@ int main(int argc, char *argv[]) {
         
              printf("\n\tLiteral Table:\n");
              
-        printf("================================================\n");
-        printf("%12s%12s%20s\n","Table Index","Value","Symbol Table Index");
+        printf("==========================================================================\n");
+        printf("%12s%40s%20s\n","Table Index","Value","Symbol Table Index");
         
-        printf("================================================\n");
+        printf("==========================================================================\n");
         for(outer = 1; outer < lit_table_index; outer++) {
-          printf("%12d%12s%20d\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
+          printf("%12d%40s%20d\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
       
           }
         printf("\n\nImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )
           printf("%s", line);
         
-        for(outer = 0; outer < sym_table_index; outer++) {
+        for(outer = 1; outer < sym_table_index; outer++) {
           if(symtable[outer].defined == 'u') {
             errors[error_table_index].address = symtable[outer].address;
             errors[error_table_index].errorType = 0;
@@ -620,7 +613,7 @@ int main(int argc, char *argv[]) {
           }
         }
         printf("\n\nErrors:");
-        for(outer = 0; outer < error_table_index; outer++) {
+        for(outer = 1; outer < error_table_index; outer++) {
           printf("\nLine %d : %s %s",errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
           
         }

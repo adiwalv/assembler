@@ -3,7 +3,7 @@
 	c db "jj",10,10,0		
 	b dd 10,20
 	b db "ad",10,0
-	t dd 10,12,34,5
+	t dd 1120,12,34,5
 	a db "hel",10,0
 	m dd 2
 	section .bss
