@@ -13,8 +13,8 @@
 ```
 ### Options 
 
- -p : To print source program.
- -s : To print symbol table.
- -i : To print immediate code.
- -t : To print literal table.
- -l : To print lst of the source file.
+> 1. -p : To print source program.
+> 2. -s : To print symbol table.
+> 3. -i : To print immediate code.
+> 4. -t : To print literal table.
+> 5. -l : To print lst of the source file.
