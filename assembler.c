@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<unistd.h>
 #include<string.h>
 #include<stdlib.h>
 #include<ctype.h>
@@ -41,17 +42,20 @@ void printImmediateCode(FILE* op);
 void printErrorList(int error_table_index, int sym_table_index);
 
 int main(int argc, char *argv[]) {
-    char line[150];
+  if (optind != argc-2) {
+      printf("Usage: %s file_name [-psilt] [-h for help] \n",argv[0]);
+  }
+  int ch;
+  char line[150];
     char *token = (char*)malloc(sizeof(char) * 100);
     char *token1 = (char*)malloc(sizeof(char) * 100);
     char *token2 = (char*)malloc(sizeof(char) * 100);
     char *token3 = (char*)malloc(sizeof(char) * 100);
-    int outer, address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
+    int address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
     int op1,op2;
     //static const char input[] = "program.asm";
     static const char immediate_output[] = "immediate.i";
-    
-    FILE *ip = fopen(argv[1],"r");
+    FILE *ip = fopen(argv[optind],"r");
     FILE *op = fopen(immediate_output,"w");
     if(ip!=NULL){
       fetchSection(".data",&ip,token,&address);
@@ -86,7 +90,7 @@ int main(int argc, char *argv[]) {
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
               symtable[sym_table_index].defined = 'd';
               symtable[sym_table_index].type = 's';
-            } else if(strcmp(token,"db") == 0) {
+            } else if(strcmp(token,"db") == 0) { 
               count = 0;
               token = strtok(NULL,"\n\t\r ");
               token1 = strtok(token,",");
@@ -504,13 +508,35 @@ int main(int argc, char *argv[]) {
         //printf("%s",errorTypes[errors[0].errorType]);
         rewind(ip);
         lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
-        
-        printSource(ip);
-        printSymTab(sym_table_index);
-        printLiteralTab(lit_table_index);
-        printImmediateCode(op);
-        printErrorList(error_table_index, sym_table_index);
-        fclose(ip);
+    while ((ch = getopt(argc, argv, "psitlh")) != -1)
+    {
+      switch(ch){
+        case 'p':
+          printSource(ip);
+          break;
+          
+        case 's':
+          printSymTab(sym_table_index);
+          break;
+          
+        case 'i':
+          printImmediateCode(op);
+          break;
+          
+        case 't':
+          printLiteralTab(lit_table_index);
+          break;
+
+           case 'l':
+          break;
+          
+        case 'h':
+          printf("\n-p : To print source program.\n-s : To print symbol table\n-i : To print immediate code\n-t : To print literal table\n-l : To print lst of the source file");
+          break;
+      } 
+    }
+    printErrorList(error_table_index, sym_table_index);
+    fclose(ip);
     } else {
       perror(argv[1]);
     }
@@ -605,7 +631,7 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 void printSource(FILE* ip){
   int line_no = 1;
   char line[50];
-  printf("\tProgram:\n");
+  printf("\n\n\tProgram:\n");
   while ( fgets ( line, sizeof line, ip ) != NULL ){
     printf("%d  %s",line_no, line);
     line_no++;
@@ -614,10 +640,10 @@ void printSource(FILE* ip){
 
 void printSymTab(int sym_table_index){
   int outer;
-          printf("\n\tSym Table:\n");
-        printf("========================================================================================================================================\n");
+          printf("\n\n\tSym Table:\n");
+        printf("=======================================================================================================================================\n");
         printf("%12s%12s%12s%12s%12s%12s%30s%10s%18s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
-        printf("========================================================================================================================================\n");
+        printf("=======================================================================================================================================\n");
         for(outer = 1; outer < sym_table_index; outer++) {
           printf("%12d%12s%12d%12d%12c%12c%30s%10d%18d\n",symtable[outer].sym_table_index,symtable[outer].name,symtable[outer].size,symtable[outer].no_of_items,symtable[outer].type,symtable[outer].defined,symtable[outer].value,symtable[outer].address,symtable[outer].literal_table_link);
         }
@@ -626,7 +652,7 @@ void printSymTab(int sym_table_index){
 
 void printLiteralTab(int lit_table_index){
   int outer;
-  printf("\n\tLiteral Table:\n");
+  printf("\n\n\tLiteral Table:\n");
              
         printf("==========================================================================\n");
         printf("%12s%40s%20s\n","Table Index","Value","Symbol Table Index");
@@ -640,7 +666,7 @@ void printLiteralTab(int lit_table_index){
 
 void printImmediateCode(FILE* op){
   char line[50];
-  printf("\n\nImmediate Code from the file created:");
+  printf("\n\n\tImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )
           printf("%s", line);
 
@@ -656,7 +682,7 @@ void printErrorList(int error_table_index, int sym_table_index){
             error_table_index++;
           }
         }
-        printf("\n\nErrors:");
+        printf("\n\tErrors:");
         for(outer = 1; outer < error_table_index; outer++) {
           printf("\nLine %d : %s %s",errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
           
