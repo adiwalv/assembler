@@ -708,7 +708,7 @@ void printSource(FILE* ip){
   char line[50];
   printf("\n\n\tProgram:\n");
   while ( fgets ( line, sizeof line, ip ) != NULL ){
-    printf("%d  %s",line_no, line);
+    printf("%12d%20s",line_no, line);
     line_no++;
   }
 }
