@@ -28,91 +28,17 @@ struct errorTable{
 
 char errorTypes[2][50] = {"Variable not defined!","Multiple definition of Variable"};
 
-char* convertStringToHex(char* str) {
-  unsigned long i;
-  char *strH = (char*)malloc(sizeof(char)*100);
-  //printf("%s",*str);
-  memset(strH,0,strlen(strH));
-  for(i = 0; i < strlen(str); i++) {
-    sprintf((char*)strH+i*2,"%02X",str[i]);
-  }
-  //printf("Hex is %s",strH);
-  return strH;
-}
-
-char* extract_quoted_string(char *substring, char *token1) {
-  substring[0] = '\0';
-  char *start = strchr(token1, '"') + 1;
-  strncat(substring, start, strcspn(start, "\""));
-  return substring;
-}
-
-int checkEntry(char *s, int sym_table_index) {
-  int i = 0;
-  for(i = 0; i < sym_table_index; i++){
-    if(strcmp(symtable[i].name,s) == 0) {
-      return i;
-    }
-  }
-  return -1;
-}
-
-int registerTable(char *s){
-  if(strcmp(s,"eax") == 0)
-    return 0;
-  if(strcmp(s,"ecx") == 0)
-    return 1;
-  if(strcmp(s,"edx") == 0)
-    return 2;
-  if(strcmp(s,"ebx") == 0)
-    return 3;
-  if(strcmp(s,"esi") == 0)
-    return 4;
-  if(strcmp(s,"edi") == 0)
-    return 5;
-  return -1;
-}
-
-void fetchSection(char* section, FILE **fp, char *token, int *address){
-  char line[50];
-  while(fgets(line, sizeof line, *fp ) != NULL ) {
-          token = strtok(line,"\n\t\r ");
-          if(strcmp(token,"section") == 0) {
-            token = strtok(NULL,"\n\t\r ");
-            if(strcmp(token,section) == 0) {
-              break;
-            }	
-          }
-          (*address)++;
-        }
-}
-
-int populateLiteralTable(int sym_table_index, int lit_table_index){
-  int index = 0 ;
-  long array[200];
-  char *str;
-  long a;
-  for(int i = 0; i < sym_table_index; i++) {
-    a = atoi(symtable[i].name);
-    if(a != (long)NULL ){
-      symtable[i].type = 'I';
-      symtable[i].defined = 'd';
-      array[index] = a;
-      index++;
-      array[index] = i;
-      index++;
-    }
-  }
-  for(int i = 0; i < index ; i=i+2) {
-    littab[lit_table_index].lit_table_index = lit_table_index;
-    sprintf(str,"%X",(unsigned int)array[i]);
-    strcpy(littab[lit_table_index].value,str);
-    littab[lit_table_index].sym_table_index = array[i+1];
-    symtable[array[i+1]].literal_table_link = lit_table_index;
-    lit_table_index++;
-    }
-  return lit_table_index;  
-}
+char* convertStringToHex(char* str);
+char* extract_quoted_string(char *substring, char *token1);
+int checkEntry(char *s, int sym_table_index);
+int registerTable(char *s);
+void fetchSection(char* section, FILE **fp, char *token, int *address);
+int populateLiteralTable(int sym_table_index, int lit_table_index);
+void printSource(FILE* ip);
+void printSymTab(int sym_table_index);
+void printLiteralTab(int lit_table_index);
+void printImmediateCode(FILE* op);
+void printErrorList(int error_table_index, int sym_table_index);
 
 int main(int argc, char *argv[]) {
     char line[150];
@@ -578,18 +504,129 @@ int main(int argc, char *argv[]) {
         //printf("%s",errorTypes[errors[0].errorType]);
         rewind(ip);
         lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
-        printf("\tProgram:\n");
-        while ( fgets ( line, sizeof line, ip ) != NULL )
-          printf("%s",line);
-        printf("\n\tSym Table:\n");
+        
+        printSource(ip);
+        printSymTab(sym_table_index);
+        printLiteralTab(lit_table_index);
+        printImmediateCode(op);
+        printErrorList(error_table_index, sym_table_index);
+        fclose(ip);
+    } else {
+      perror(argv[1]);
+    }
+  return 0;
+}    
+char* convertStringToHex(char* str) {
+  unsigned long i;
+  char *strH = (char*)malloc(sizeof(char)*100);
+  //printf("%s",*str);
+  memset(strH,0,strlen(strH));
+  for(i = 0; i < strlen(str); i++) {
+    sprintf((char*)strH+i*2,"%02X",str[i]);
+  }
+  //printf("Hex is %s",strH);
+  return strH;
+}
+
+char* extract_quoted_string(char *substring, char *token1) {
+  substring[0] = '\0';
+  char *start = strchr(token1, '"') + 1;
+  strncat(substring, start, strcspn(start, "\""));
+  return substring;
+}
+
+int checkEntry(char *s, int sym_table_index) {
+  int i = 0;
+  for(i = 0; i < sym_table_index; i++){
+    if(strcmp(symtable[i].name,s) == 0) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+int registerTable(char *s){
+  if(strcmp(s,"eax") == 0)
+    return 0;
+  if(strcmp(s,"ecx") == 0)
+    return 1;
+  if(strcmp(s,"edx") == 0)
+    return 2;
+  if(strcmp(s,"ebx") == 0)
+    return 3;
+  if(strcmp(s,"esi") == 0)
+    return 4;
+  if(strcmp(s,"edi") == 0)
+    return 5;
+  return -1;
+}
+
+void fetchSection(char* section, FILE **fp, char *token, int *address){
+  char line[50];
+  while(fgets(line, sizeof line, *fp ) != NULL ) {
+          token = strtok(line,"\n\t\r ");
+          if(strcmp(token,"section") == 0) {
+            token = strtok(NULL,"\n\t\r ");
+            if(strcmp(token,section) == 0) {
+              break;
+            }	
+          }
+          (*address)++;
+        }
+}
+
+int populateLiteralTable(int sym_table_index, int lit_table_index){
+  int index = 0 ;
+  long array[200];
+  char *str;
+  long a;
+  for(int i = 0; i < sym_table_index; i++) {
+    a = atoi(symtable[i].name);
+    if(a != (long)NULL ){
+      symtable[i].type = 'I';
+      symtable[i].defined = 'd';
+      array[index] = a;
+      index++;
+      array[index] = i;
+      index++;
+    }
+  }
+  for(int i = 0; i < index ; i=i+2) {
+    littab[lit_table_index].lit_table_index = lit_table_index;
+    sprintf(str,"%X",(unsigned int)array[i]);
+    strcpy(littab[lit_table_index].value,str);
+    littab[lit_table_index].sym_table_index = array[i+1];
+    symtable[array[i+1]].literal_table_link = lit_table_index;
+    lit_table_index++;
+    }
+  return lit_table_index;  
+}
+
+void printSource(FILE* ip){
+  int line_no = 1;
+  char line[50];
+  printf("\tProgram:\n");
+  while ( fgets ( line, sizeof line, ip ) != NULL ){
+    printf("%d  %s",line_no, line);
+    line_no++;
+  }
+}
+
+void printSymTab(int sym_table_index){
+  int outer;
+          printf("\n\tSym Table:\n");
         printf("========================================================================================================================================\n");
         printf("%12s%12s%12s%12s%12s%12s%30s%10s%18s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
         printf("========================================================================================================================================\n");
         for(outer = 1; outer < sym_table_index; outer++) {
           printf("%12d%12s%12d%12d%12c%12c%30s%10d%18d\n",symtable[outer].sym_table_index,symtable[outer].name,symtable[outer].size,symtable[outer].no_of_items,symtable[outer].type,symtable[outer].defined,symtable[outer].value,symtable[outer].address,symtable[outer].literal_table_link);
         }
-        
-             printf("\n\tLiteral Table:\n");
+
+}
+
+void printLiteralTab(int lit_table_index){
+  int outer;
+  printf("\n\tLiteral Table:\n");
              
         printf("==========================================================================\n");
         printf("%12s%40s%20s\n","Table Index","Value","Symbol Table Index");
@@ -599,11 +636,19 @@ int main(int argc, char *argv[]) {
           printf("%12d%40s%20d\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
       
           }
-        printf("\n\nImmediate Code from the file created:");
+}
+
+void printImmediateCode(FILE* op){
+  char line[50];
+  printf("\n\nImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )
           printf("%s", line);
-        
-        for(outer = 1; outer < sym_table_index; outer++) {
+
+}
+
+void printErrorList(int error_table_index, int sym_table_index){
+  int outer;
+  for(outer = 1; outer < sym_table_index; outer++) {
           if(symtable[outer].defined == 'u') {
             errors[error_table_index].address = symtable[outer].address;
             errors[error_table_index].errorType = 0;
@@ -616,9 +661,4 @@ int main(int argc, char *argv[]) {
           printf("\nLine %d : %s %s",errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
           
         }
-        fclose(ip);
-    } else {
-      perror(argv[1]);
-    }
-  return 0;
-}    
+}

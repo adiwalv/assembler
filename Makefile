@@ -2,4 +2,4 @@ all:
 	gcc -o assembler assembler.c
 
 clean:
-	rm assembler immediate.asm
+	rm assembler immediate.i
