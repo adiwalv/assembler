@@ -504,6 +504,7 @@ int main(int argc, char *argv[]) {
         address++;
       }
         fclose(op);
+        
         op = fopen(immediate_output,"r");
         //printf("%s",errorTypes[errors[0].errorType]);
         rewind(ip);
@@ -601,10 +602,27 @@ void fetchSection(char* section, FILE **fp, char *token, int *address){
         }
 }
 
+
+char* makeLittleEndian(char *str){
+  char* str5 = (char*)malloc(sizeof(char)*10);
+  memset(str5,0,10);
+  str5[0] = str[6];
+  str5[1] = str[7];
+  str5[2] = str[4];
+  str5[3] = str[5];
+  str5[4] = str[2];
+  str5[5] = str[3];
+   str5[6] = str[0];
+  str5[7] = str[1];
+  printf("%s\n", str5);
+  return str5;
+}
+
 int populateLiteralTable(int sym_table_index, int lit_table_index){
   int index = 0 ;
   long array[200];
-  char *str;
+  char *str4 = (char*)malloc(sizeof(char)*8);
+  memset(str4,0,8);
   long a;
   for(int i = 0; i < sym_table_index; i++) {
     a = atoi(symtable[i].name);
@@ -617,15 +635,19 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
       index++;
     }
   }
+
   for(int i = 0; i < index ; i=i+2) {
     littab[lit_table_index].lit_table_index = lit_table_index;
-    sprintf(str,"%X",(unsigned int)array[i]);
-    strcpy(littab[lit_table_index].value,str);
+    sprintf(str4,"%08X",(unsigned int)array[i]);
+    str4 = makeLittleEndian(str4);
+    //printf("%s\n",str4);
+    strcpy(littab[lit_table_index].value,str4);
     littab[lit_table_index].sym_table_index = array[i+1];
     symtable[array[i+1]].literal_table_link = lit_table_index;
     lit_table_index++;
     }
-  return lit_table_index;  
+  return lit_table_index;
+  free(str4);
 }
 
 void printSource(FILE* ip){
