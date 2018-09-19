@@ -115,7 +115,6 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 }
 
 int main(int argc, char *argv[]) {
-  if( argc == 2 ) {
     char line[150];
     char *token = (char*)malloc(sizeof(char) * 100);
     char *token1 = (char*)malloc(sizeof(char) * 100);
@@ -124,7 +123,7 @@ int main(int argc, char *argv[]) {
     int outer, address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
     int op1,op2;
     //static const char input[] = "program.asm";
-    static const char immediate_output[] = "immediate.asm";
+    static const char immediate_output[] = "immediate.i";
     
     FILE *ip = fopen(argv[1],"r");
     FILE *op = fopen(immediate_output,"w");
@@ -621,13 +620,5 @@ int main(int argc, char *argv[]) {
     } else {
       perror(argv[1]);
     }
-    return 0;
-  }
-  else if( argc > 2 ) {
-    printf("At the moment this assembler can only work with one .asm source file at a time...\n");
-  }
-  else {
-    printf("One argument expected.\n");
-  }
   return 0;
 }    
