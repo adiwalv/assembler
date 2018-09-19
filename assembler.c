@@ -40,6 +40,7 @@ void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
 void printImmediateCode(FILE* op);
 void printErrorList(int error_table_index, int sym_table_index);
+char* makeLittleEndian(char *str);
 
 int main(int argc, char *argv[]) {
   if (optind != argc-2) {
@@ -71,20 +72,26 @@ int main(int argc, char *argv[]) {
             if(strcmp(token,"dd") == 0) {
               token = strtok(NULL,"\n\t\r ");
               count = 0;
-              int i = 0;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].sym_table_index = sym_table_index;
-
+              char *hex = (char*)malloc(sizeof(char)*10);
               token1 = strtok(token,",");
-
-
-              char *str1 = (char*)malloc(sizeof(char)*8);
-              bzero(str1,strlen(str1));
-              while(token1 && i < 8) {
+              sprintf(hex,"%08X",atoi(token1));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
+              while(token1) {
                 token1 = strtok(NULL,",");
+                if(token1 != NULL) {
+                sprintf(hex,"%08X",atoi(token1));
+                hex = makeLittleEndian(hex);
+                strcat(littab[lit_table_index].value,hex);
+                }
                 count++;
               }
-              //lit_table_index++;
+              lit_table_index++;
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
@@ -137,10 +144,24 @@ int main(int argc, char *argv[]) {
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].sym_table_index = sym_table_index;
               token1 = strtok(token,",");
+              char *hex = (char*)malloc(sizeof(char)*8);
+              sprintf(hex,"%08X",atoi(token1));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
               while(token1) {
                 token1 = strtok(NULL,",");
+                if(token1 != NULL) {
+                sprintf(hex,"%08X",atoi(token1));
+                hex = makeLittleEndian(hex);
+                strcat(littab[lit_table_index].value,hex);
+                }
                 count++;
               }
+              lit_table_index++;
+              
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
@@ -209,6 +230,14 @@ int main(int argc, char *argv[]) {
           while(token) {
             if(strcmp(token,"resb") == 0) {
               token = strtok(NULL,"\n\t\r ");
+              char *hex = (char*)malloc(sizeof(char)*8);
+              sprintf(hex,"%08X",atoi(token));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
+              lit_table_index++;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].no_of_items = 0;
               symtable[sym_table_index].sym_table_index = sym_table_index;
@@ -218,6 +247,14 @@ int main(int argc, char *argv[]) {
               symtable[sym_table_index].type = 's';
             } else if(strcmp(token,"resd") == 0) {
               token = strtok(NULL,"\n\t\r ");
+              char *hex = (char*)malloc(sizeof(char)*8);
+              sprintf(hex,"%08X",atoi(token));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
+              lit_table_index++;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].no_of_items = atoi(token);
               symtable[sym_table_index].sym_table_index = sym_table_index;
@@ -234,6 +271,14 @@ int main(int argc, char *argv[]) {
           while(token) {
             if(strcmp(token,"resb") == 0) {
               token = strtok(NULL,"\n\t\r ");
+              char *hex = (char*)malloc(sizeof(char)*8);
+              sprintf(hex,"%08X",atoi(token));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
+              lit_table_index++;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].no_of_items = 0;
               symtable[sym_table_index].sym_table_index = sym_table_index;
@@ -247,6 +292,15 @@ int main(int argc, char *argv[]) {
               symtable[sym_table_index].type = 's';
             } else if(strcmp(token,"resd") == 0) {
               token = strtok(NULL,"\n\t\r ");
+              
+              char *hex = (char*)malloc(sizeof(char)*8);
+              sprintf(hex,"%08X",atoi(token));
+              hex = makeLittleEndian(hex);
+              littab[lit_table_index].lit_table_index = lit_table_index;
+              symtable[sym_table_index].literal_table_link = lit_table_index;
+              strcpy(littab[lit_table_index].value,hex);
+              littab[lit_table_index].sym_table_index = sym_table_index;
+              lit_table_index++;
               strcpy(symtable[sym_table_index].value,token);
               symtable[sym_table_index].no_of_items = atoi(token);
               symtable[sym_table_index].sym_table_index = sym_table_index;
@@ -614,7 +668,6 @@ char* makeLittleEndian(char *str){
   str5[5] = str[3];
    str5[6] = str[0];
   str5[7] = str[1];
-  printf("%s\n", str5);
   return str5;
 }
 
