@@ -19,7 +19,7 @@
 > 4. -t : To print literal table.
 > 5. -l : To print lst of the source file.
 
-### To use as shell command
+### To use as a shell command
 
 ```bash
 make

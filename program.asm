@@ -22,6 +22,7 @@ pqr:	jmp eax
 	jmp js
 ajx:	mov ts,i
 	mov ts,10
+	mov tt, 0
 	add ebx,200
 	mov kkkt,ecx
 	mov ecx,tmp
