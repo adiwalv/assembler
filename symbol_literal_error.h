@@ -1,9 +1,9 @@
 #include "print.h"
 
 char* convertStringToHex(char* str) {
-  unsigned long i;
-  char *strH = (char*)malloc(sizeof(char)*100);
-  //printf("%s",*str);
+  
+  strH = (char*)malloc(sizeof(char)*100);
+  
   memset(strH,0,strlen(strH));
   for(i = 0; i < strlen(str); i++) {
     sprintf((char*)strH+i*2,"%02X",str[i]);
@@ -109,14 +109,13 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 
 void generateTables(char *filename){
 
-  
-  char *token = (char*)malloc(sizeof(char) * 100);
-    char *token1 = (char*)malloc(sizeof(char) * 100);
-    char *token2 = (char*)malloc(sizeof(char) * 100);
-    char *token3 = (char*)malloc(sizeof(char) * 100);
-    ip = fopen(filename,"r");
-    op = fopen(immediate_output,"w");
-    if(ip!=NULL){
+  token = (char*)malloc(sizeof(char) * 100);  
+  token1 = (char*)malloc(sizeof(char) * 100);
+  token2 = (char*)malloc(sizeof(char) * 100);
+  token3 = (char*)malloc(sizeof(char) * 100);
+  ip = fopen(filename,"r");
+  op = fopen(immediate_output,"w");
+  if(ip!=NULL){
       fetchSection(".data",&ip,token,&address);
       while(fgets(line, sizeof line, ip) != NULL) {     
         token = strtok(line,"\n\t\r ");

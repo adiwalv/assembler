@@ -12,8 +12,10 @@ void printSymTab(int sym_table_index){
 
 }
 
-void printSource(FILE* ip){
+void printSource(char *filename){
   int line_no = 1;
+  char line[50];
+  FILE *ip = fopen(filename,"r");
   printf("\n\n\tProgram:\n");
   while ( fgets ( line, sizeof line, ip ) != NULL ){
     printf("%12d%20s",line_no, line);

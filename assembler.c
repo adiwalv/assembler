@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         generateTables(argv[optind]);
 
         if(p_flag)
-          printSource(ip);
+          printSource(argv[optind]);
        
           
        if(s_flag)
