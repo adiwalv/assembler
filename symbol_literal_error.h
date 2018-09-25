@@ -390,7 +390,7 @@ void generateTables(char *filename){
           while(token1) {
             strcpy(symtable[sym_table_index].name,token1);
             symtable[sym_table_index].defined = 'u';
-            symtable[sym_table_index].address = address;
+            symtable[sym_table_index].address = address + 1;
             symtable[sym_table_index].type = 'l';
             strcpy(symtable[sym_table_index].value,"***");
             symtable[sym_table_index].sym_table_index = sym_table_index;
@@ -407,7 +407,7 @@ void generateTables(char *filename){
             symtable[sym_table_index].defined = 'd';
             symtable[sym_table_index].type = 'l';
             strcpy(symtable[sym_table_index].value,"***");
-            symtable[sym_table_index].address = address;
+            symtable[sym_table_index].address = address + 1;
             sym_table_index++;}
           else {
             symtable[check].defined = 'd';
