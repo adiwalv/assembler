@@ -19,9 +19,14 @@
 > 4. -t : To print literal table.
 > 5. -l : To print lst of the source file.
 
-### Use as shell command
+### To use as shell command
 
 ```bash
 make
 make install
 ```
+### Usage
+```bash
+assembler file_name [-options] [-h for help]
+```
+
