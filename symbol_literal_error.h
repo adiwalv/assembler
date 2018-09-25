@@ -1,9 +1,9 @@
 #include "print.h"
 
 char* convertStringToHex(char* str) {
-  
-  strH = (char*)malloc(sizeof(char)*100);
-  
+  unsigned long i;
+  char *strH = (char*)malloc(sizeof(char)*100);
+  //printf("%s",*str);
   memset(strH,0,strlen(strH));
   for(i = 0; i < strlen(str); i++) {
     sprintf((char*)strH+i*2,"%02X",str[i]);
@@ -42,6 +42,10 @@ int registerTable(char *s){
     return 4;
   if(strcmp(s,"edi") == 0)
     return 5;
+  if(strcmp(s,"esp") == 0)
+    return 6;
+  if(strcmp(s,"ebp") == 0)
+    return 7;
   return -1;
 }
 
@@ -82,6 +86,14 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
   long a;
   for(int i = 0; i < sym_table_index; i++) {
     a = atoi(symtable[i].name);
+    if (strcmp(symtable[i].name,"0") == 0){
+      symtable[i].type = 'I';
+      symtable[i].defined = 'd';
+      array[index] = a;
+      index++;
+      array[index] = i;
+      index++;
+    }
     if(a != (long)NULL ){
       symtable[i].type = 'I';
       symtable[i].defined = 'd';
@@ -109,13 +121,14 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 
 void generateTables(char *filename){
 
-  token = (char*)malloc(sizeof(char) * 100);  
-  token1 = (char*)malloc(sizeof(char) * 100);
-  token2 = (char*)malloc(sizeof(char) * 100);
-  token3 = (char*)malloc(sizeof(char) * 100);
-  ip = fopen(filename,"r");
-  op = fopen(immediate_output,"w");
-  if(ip!=NULL){
+  
+  char *token = (char*)malloc(sizeof(char) * 100);
+    char *token1 = (char*)malloc(sizeof(char) * 100);
+    char *token2 = (char*)malloc(sizeof(char) * 100);
+    char *token3 = (char*)malloc(sizeof(char) * 100);
+    ip = fopen(filename,"r");
+    op = fopen(immediate_output,"w");
+    if(ip!=NULL){
       fetchSection(".data",&ip,token,&address);
       while(fgets(line, sizeof line, ip) != NULL) {     
         token = strtok(line,"\n\t\r ");
@@ -407,11 +420,11 @@ void generateTables(char *filename){
             symtable[sym_table_index].defined = 'd';
             symtable[sym_table_index].type = 'l';
             strcpy(symtable[sym_table_index].value,"***");
-            symtable[sym_table_index].address = address + 1;
+            symtable[sym_table_index].address = address + 1 ;
             sym_table_index++;}
           else {
             symtable[check].defined = 'd';
-            symtable[check].address = address;
+            symtable[check].address = address + 1;
           }
         }
         if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0)){
