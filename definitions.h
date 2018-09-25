@@ -45,11 +45,10 @@ void printImmediateCode(FILE* op);
 void printErrorList(int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
-int ch;
 char line[150];
-int address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
+int ch, outer,address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
 int op1,op2;
-//static const char input[] = "program.asm";
 static const char immediate_output[] = "immediate.i";
-  
 
+FILE *ip;
+FILE *op;

@@ -1,8 +1,19 @@
 #include "definitions.h"
 
+void printSymTab(int sym_table_index){
+  int outer;
+          printf("\n\n\tSym Table:\n");
+        printf("=======================================================================================================================================\n");
+        printf("%12s%12s%12s%12s%12s%12s%30s%10s%18s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
+        printf("=======================================================================================================================================\n");
+        for(outer = 1; outer < sym_table_index; outer++) {
+          printf("%12d%12s%12d%12d%12c%12c%30s%10d%18d\n",symtable[outer].sym_table_index,symtable[outer].name,symtable[outer].size,symtable[outer].no_of_items,symtable[outer].type,symtable[outer].defined,symtable[outer].value,symtable[outer].address,symtable[outer].literal_table_link);
+        }
+
+}
+
 void printSource(FILE* ip){
   int line_no = 1;
-  char line[50];
   printf("\n\n\tProgram:\n");
   while ( fgets ( line, sizeof line, ip ) != NULL ){
     printf("%12d%20s",line_no, line);
@@ -11,7 +22,7 @@ void printSource(FILE* ip){
 }
 
 void printLiteralTab(int lit_table_index){
-  int outer;
+  
   printf("\n\n\tLiteral Table:\n");
              
         printf("==========================================================================\n");
@@ -25,7 +36,7 @@ void printLiteralTab(int lit_table_index){
 }
 
 void printImmediateCode(FILE* op){
-  char line[50];
+  
   printf("\n\n\tImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )
           printf("%s", line);
@@ -49,3 +60,10 @@ void printErrorList(int error_table_index, int sym_table_index){
         }
 }
 
+void printUsage(char *argv){
+   printf("Usage: %s file_name [-psilt] [-h for help]\n",argv);
+}
+
+void printHelp(){
+     printf("\n-p : To print source program.\n-s : To print symbol table\n-i : To print immediate code\n-t : To print literal table\n-l : To print lst of the source file");
+}
