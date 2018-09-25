@@ -637,5 +637,6 @@ void generateTables(char *filename){
     fclose(ip);
     } else {
       perror(filename);
+      exit(0);
     }
 }
