@@ -5,7 +5,7 @@
 #include<ctype.h>
 
 
-struct symtab{
+struct symtab {
   int sym_table_index;
   char name[150];
   int size;
@@ -18,19 +18,19 @@ struct symtab{
 }symtable[100];
 
 
-struct literaltab{
+struct literaltab {
   int lit_table_index;
   char value[100];
   int sym_table_index;
 }littab[100];
 
-struct errorTable{
+struct errorTable {
   int address;
   int errorType;
   int symTab_index;
 }errors[100];
 
-char errorTypes[2][50] = {"Variable not defined!","Multiple definition of Variable"};
+char errorTypes[2][50] = {"Variable not defined!", "Multiple definition of Variable"};
 
 char* convertStringToHex(char* str);
 char* extract_quoted_string(char *substring, char *token1);
@@ -46,9 +46,10 @@ void printErrorList(int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
 char line[150];
-int ch, outer,address = 0, sym_table_index=1, count=0, error_table_index = 1, lit_table_index = 1, check;
-int op1,op2;
+int ch, outer,address = 0, sym_table_index = 1, count = 0, error_table_index = 1, lit_table_index = 1, check;
+int op1, op2;
 char immediate_output[] = "immediate.i";
-char *token = NULL,*token1 = NULL,*token2 = NULL,*token3 = NULL,*strH = NULL;
+char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, *strH = NULL;
 unsigned long i;
-FILE *ip,*op;
+FILE *ip, *op;
+

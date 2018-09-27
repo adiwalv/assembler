@@ -165,6 +165,11 @@ void generateTables(char *filename){
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+              //char hexAdd[10];
+              //int i = sprintf(hexAdd,"%08X",symtable[sym_table_index].address);
+              //printf("%s,--->",hexAdd);
+              //symtable[sym_table_index].address =
+              //printf("%d,-->",symtable[sym_table_index].address);
               symtable[sym_table_index].defined = 'd';
               symtable[sym_table_index].type = 's';
             } else if(strcmp(token,"db") == 0) { 

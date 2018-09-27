@@ -1,6 +1,6 @@
 // Author : Vikas Adiwal
 
-#include "./symbol_literal_error.h"
+#include "build/generate_lst.h"
 int main(int argc, char *argv[]) {
   int p_flag, s_flag, i_flag, t_flag, l_flag, h_flag;
   p_flag = s_flag = i_flag = t_flag = l_flag = h_flag = 0;
