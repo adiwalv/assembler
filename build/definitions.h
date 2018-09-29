@@ -30,7 +30,7 @@ struct errorTable {
   int symTab_index;
 }errors[100];
 
-char errorTypes[2][50] = {"Variable not defined!", "Multiple definition of Variable"};
+char errorTypes[2][50] = {"Symbol %s undefined", "Symbol %s redefined"};
 
 char* convertStringToHex(char* str);
 char* extract_quoted_string(char *substring, char *token1);
@@ -42,7 +42,7 @@ void printSource(char *filename);
 void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
 void printImmediateCode(FILE* op);
-void printErrorList(int error_table_index, int sym_table_index);
+void printErrorList(char* filename,int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
 char line[150];

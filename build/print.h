@@ -47,9 +47,9 @@ void printImmediateCode(FILE* op){
 
 }
 
-void printErrorList(int error_table_index, int sym_table_index){
+void printErrorList(char *filename,int error_table_index, int sym_table_index){
   int outer;
-  for(outer = 1; outer < sym_table_index; outer++) {
+  for(outer = 1; outer <= sym_table_index; outer++) {
           if(symtable[outer].defined == 'u') {
             errors[error_table_index].address = symtable[outer].address;
             errors[error_table_index].errorType = 0;
@@ -57,10 +57,14 @@ void printErrorList(int error_table_index, int sym_table_index){
             error_table_index++;
           }
         }
-        printf("\n\tErrors:");
-        for(outer = 1; outer < error_table_index; outer++) {
-          printf("\nLine %d : %s %s",errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
-          
+        for(outer = 1; outer <= error_table_index; outer++) {
+          if(errors[outer].errorType == 0) {
+            printf("\n%s:%d: error: Symbol %s undefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
+          }
+          if(errors[outer].errorType == 1) {
+            printf("\n%s:%d: error: Symbol %s redefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
+          }
+          //printf("\n%s:%d: %s %s",filename,errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
         }
 }
 
