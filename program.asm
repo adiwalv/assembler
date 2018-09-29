@@ -21,7 +21,7 @@ pqr:	jmp 28888
 	add edi,esi
 	mov a,ecx
 	jmp js
-ajx:	mov ts,i
+ajx:	mov ts,20000
 	mov ts,10
 	mov tt, 0
 	add ebx,200

@@ -487,7 +487,7 @@ void generateTables(char *filename){
                 strcpy(symtable[sym_table_index].value,"***");
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 fprintf(op,"\n%s Symtab#%d", token, sym_table_index);
-                sym_table_index++;
+                                sym_table_index++;
                 }
               } else
                 fprintf(op,"\n%s Symtab#%d", token, check);
@@ -500,6 +500,18 @@ void generateTables(char *filename){
             if(op1 < 0 && op2 >= 0) {
               check = checkEntry(token2, sym_table_index);
               if(check < 0) {
+                a = atoi(token2);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Littab#%d , Reg#%d", token, lit_table_index, op2);  
+                  lit_table_index++;
+                } else {
                 strcpy(symtable[sym_table_index].name,token2);
                 symtable[sym_table_index].defined = 'u';
                 symtable[sym_table_index].address = address+3;
@@ -508,6 +520,7 @@ void generateTables(char *filename){
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 fprintf(op,"\n%s SymTab#%d , Reg#%d ",token, sym_table_index , op2 );
                 sym_table_index++;
+                }
               } else {
                 fprintf(op,"\n%s SymTab#%d , Reg#%d ",token, check , op2 );
               }
@@ -536,7 +549,7 @@ void generateTables(char *filename){
                 fprintf(op,"\n%s Reg#%d , SymTab#%d ",token, op1, symtable[sym_table_index].sym_table_index);
                 sym_table_index++;
                 }
-              } 
+              }
               else {
                 fprintf(op,"\n%s Reg#%d , SymTab#%d ",token, op1 , check );
               }
@@ -547,16 +560,18 @@ void generateTables(char *filename){
             else {
               check = checkEntry(token2, sym_table_index);
               if( check < 0) {
-                strcpy(symtable[sym_table_index].name,token3);
-                symtable[sym_table_index].defined = 'u';
-                symtable[sym_table_index].address = address+3;
-                symtable[sym_table_index].type = 'l';
-                strcpy(symtable[sym_table_index].value,"***");
-                symtable[sym_table_index].sym_table_index = sym_table_index;
-                sym_table_index++;
-              }
-              check = checkEntry(token1, sym_table_index);
-              if(check < 0) {
+                a = atoi(token2);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Littab#%d , Symtab#%d", token, lit_table_index, checkEntry(token3, sym_table_index));  
+                  lit_table_index++;
+                } else {
                 strcpy(symtable[sym_table_index].name,token2);
                 symtable[sym_table_index].defined = 'u';
                 symtable[sym_table_index].address = address+3;
@@ -564,9 +579,34 @@ void generateTables(char *filename){
                 strcpy(symtable[sym_table_index].value,"***");
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 sym_table_index++;
+                }
               }
-              fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token2,sym_table_index), checkEntry(token3,sym_table_index));
-              
+              check = checkEntry(token3, sym_table_index);
+              if(check < 0) {
+                a = atoi(token3);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Symtab#%d , Littab#%d", token, checkEntry(token2, sym_table_index), lit_table_index);  
+                  lit_table_index++;
+                } else {
+                strcpy(symtable[sym_table_index].name,token3);
+                symtable[sym_table_index].defined = 'u';
+                symtable[sym_table_index].address = address+3;
+                symtable[sym_table_index].type = 'l';
+                strcpy(symtable[sym_table_index].value,"***");
+                symtable[sym_table_index].sym_table_index = sym_table_index;
+                sym_table_index++;
+                }
+              }
+              if ((checkEntry(token3, sym_table_index) && checkEntry(token2, sym_table_index)) == 0){
+                  fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token2,sym_table_index), checkEntry(token3,sym_table_index));
+                }
             } // memory to memory not allowed but will require this to fill symtable
           }
         }
@@ -578,6 +618,18 @@ void generateTables(char *filename){
             if (check < 0) {
               check = checkEntry(token1, sym_table_index);
               if(check < 0) {
+                a = atoi(token1);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Littab#%d", token, lit_table_index);  
+                  lit_table_index++;
+                } else {
                 strcpy(symtable[sym_table_index].name,token1);
                 symtable[sym_table_index].defined = 'u';
                 symtable[sym_table_index].address = address + 3;
@@ -585,8 +637,8 @@ void generateTables(char *filename){
                 strcpy(symtable[sym_table_index].value,"***");
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 sym_table_index++; 
-                
                 fprintf(op,"\n%s Symtab#%d", token, sym_table_index);
+                }
               } else {
                 fprintf(op,"\n%s Symtab#%d", token, check);
               }
@@ -599,6 +651,18 @@ void generateTables(char *filename){
             if(op1 < 0 && op2 >= 0) {
               check = checkEntry(token1, sym_table_index);           
               if(check < 0) {
+                a = atoi(token1);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Littab#%d , Reg#%d", token, lit_table_index, op2);  
+                  lit_table_index++;
+                } else {  
                 strcpy(symtable[sym_table_index].name,token1);
                 symtable[sym_table_index].defined = 'u';
                 symtable[sym_table_index].address = address+3;
@@ -607,6 +671,7 @@ void generateTables(char *filename){
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 fprintf(op,"\n%s SymTab#%d , Reg#%d ",token, sym_table_index , op2 );
                 sym_table_index++;
+                }
               } else {
                 fprintf(op,"\n%s Symtab#%d , Reg#%d ",token, check , op2 );
               }
@@ -614,7 +679,7 @@ void generateTables(char *filename){
             else if(op2 < 0 && op1 >= 0) {
               check = checkEntry(token2, sym_table_index);
               if(check < 0) {
-                a = atoi(token2);
+                                a = atoi(token2);
                 if (a != (long)NULL) {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   littab[lit_table_index].lit_table_index = lit_table_index;
@@ -654,7 +719,7 @@ void generateTables(char *filename){
                   //printf("Helloooo%s\n",str4);
                   strcpy(littab[lit_table_index].value,str4);
                   littab[lit_table_index].sym_table_index = -1;
-                  fprintf(op,"\n%s  Symtab#%d, LitTab#%d",token, checkEntry(token1,sym_table_index), lit_table_index); 
+                  fprintf(op,"\n%s Symtab#%d , Littab#%d", token, checkEntry(token1, sym_table_index), lit_table_index);  
                   lit_table_index++;
                 } else {
                 strcpy(symtable[sym_table_index].name,token2);
@@ -668,7 +733,7 @@ void generateTables(char *filename){
               }
               check = checkEntry(token1, sym_table_index);
               if(check < 0) {
-                a = atoi(token1);
+                 a = atoi(token1);
                 if (a != (long)NULL) {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   littab[lit_table_index].lit_table_index = lit_table_index;
@@ -677,7 +742,7 @@ void generateTables(char *filename){
                   //printf("Helloooo%s\n",str4);
                   strcpy(littab[lit_table_index].value,str4);
                   littab[lit_table_index].sym_table_index = -1;
-                  fprintf(op,"\n%s LitTab#%d , Symtab#%d ",token, lit_table_index, checkEntry(token2,sym_table_index)); 
+                  fprintf(op,"\n%s Littab#%d , Symtab#%d", token, lit_table_index, checkEntry(token2, sym_table_index));
                   lit_table_index++;
                 } else {
                 strcpy(symtable[sym_table_index].name,token1);
@@ -687,8 +752,12 @@ void generateTables(char *filename){
                 strcpy(symtable[sym_table_index].value,"***");
                 symtable[sym_table_index].sym_table_index = sym_table_index;
                 sym_table_index++;
+                }}
+                
+                
+              if ((checkEntry(token1, sym_table_index) && checkEntry(token2, sym_table_index)) == 0){
+                  fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token1,sym_table_index), checkEntry(token2,sym_table_index));
                 }
-              }
             }
           }
         }
