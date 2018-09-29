@@ -171,32 +171,39 @@ void generateTables(char *filename){
               symtable[sym_table_index].type = 's';
             } else if(strcmp(token,"db") == 0) { 
               count = 0;
-              token = strtok(NULL,"\n\t\r ");
-              token1 = strtok(token,",");
-              char *substring = (char*)malloc(sizeof(char) * 100);
-              substring = extract_quoted_string(substring,token1);
-              count = strlen(substring);
-              strcpy(symtable[sym_table_index].value,substring);
+              //printf("%s000",line);
+              //printf("%s-->",token);
+              //printf("%s000",line);
+              token = strtok(NULL,"\"");
+              //printf("%s------->",token);
+              //token1 = strtok(NULL,"\"");
+              //printf("%s------->",token1);
+              //char *substring = (char*)malloc(sizeof(char) * 100);
+              //substring = extract_quoted_string(substring,token);
+              count = strlen(token);
+              strcpy(symtable[sym_table_index].value,token);
               littab[lit_table_index].lit_table_index = lit_table_index;
               symtable[sym_table_index].literal_table_link = lit_table_index;
-              strcpy(littab[lit_table_index].value,convertStringToHex(substring));
+              strcpy(littab[lit_table_index].value,convertStringToHex(token));
               littab[lit_table_index].sym_table_index = sym_table_index;
-              token1 = strtok(NULL,","); 
+              token1 = strtok(NULL,",");
+              printf("%s---<",token1);
               while(token1) {
                 if(strcmp(token1,"10") == 0) {
                   strcat(littab[lit_table_index].value,"0A");
-                  strcpy(substring,"\\n");
+                  strcpy(token2,"\\n");
                 }
                 if(strcmp(token1,"0") == 0) {
                   strcat(littab[lit_table_index].value,"00");
-                  strcpy(substring,"\\0");
+                  strcpy(token2,"\\0");
                 }
-                strcat(symtable[sym_table_index].value,substring);
+                strcat(symtable[sym_table_index].value,token2);
                 token1 = strtok(NULL,",");
+                printf("%s22",token1);
                 count++;
               }
               lit_table_index++;
-              free(substring);
+              //free(substring);
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
@@ -744,7 +751,7 @@ void generateTables(char *filename){
                   littab[lit_table_index].sym_table_index = -1;
                   fprintf(op,"\n%s Littab#%d , Symtab#%d", token, lit_table_index, checkEntry(token2, sym_table_index));
                   lit_table_index++;
-                  goto k2:
+                  goto k2;
                 } else {
                 strcpy(symtable[sym_table_index].name,token1);
                 symtable[sym_table_index].defined = 'u';

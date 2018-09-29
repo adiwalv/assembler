@@ -1,0 +1,14 @@
+     1                                  section .data
+     2 00000000 48656C6C6F20692061-     a db "Hello i am",10,0
+     2 00000009 6D0A00             
+     3 0000000C 0A00000014000000        d dd 10,20
+     4 00000014 15000000                t dd 21
+     5                                  section .bss
+     6 00000000 <res 0000000A>          b resb 10
+     7                                  section .text
+     8                                  global main
+     9 00000000 B80A000000              main: mov eax,10
+    10 00000005 89C3                    mov ebx,eax
+    11                                  ;mov 10,eax
+    12 00000007 B8[00000000]            mov eax, a
+    13 0000000C BB[14000000]            mov ebx, t
