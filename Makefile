@@ -8,4 +8,4 @@ install:
 	sudo cp assembler /usr/bin/
 
 count:
-	wc definitions.h print.h symbol_literal_error.h assembler.c -l
+	wc build/definitions.h build/print.h build/symbol_literal_error.h assembler.c -l

@@ -13,8 +13,8 @@
 	z resd 3
 	section .text
 	global main,printf,scanf,zzz
-main:	mov eax,t
-pqr:	jmp eax
+main:	mov eax,10
+pqr:	jmp 28888
 	add edx,ebx
 	mov to,o	
 	add edi,esi
@@ -28,6 +28,6 @@ ajx:	mov ts,i
 	mov ecx,tmp
 	jmp z
 	jnz tmpasd
-ppp:	jmp jk
+ppp:	jmp 29
 	jmp asd
 	jmp qwr

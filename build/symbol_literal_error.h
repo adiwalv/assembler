@@ -83,7 +83,6 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
   long array[200];
   char *str4 = (char*)malloc(sizeof(char)*8);
   memset(str4,0,8);
-  long a;
   for(int i = 0; i < sym_table_index; i++) {
     a = atoi(symtable[i].name);
     if (strcmp(symtable[i].name,"0") == 0){
@@ -120,8 +119,6 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 
 
 void generateTables(char *filename){
-
-  
   char *token = (char*)malloc(sizeof(char) * 100);
     char *token1 = (char*)malloc(sizeof(char) * 100);
     char *token2 = (char*)malloc(sizeof(char) * 100);
@@ -470,13 +467,27 @@ void generateTables(char *filename){
             if (check < 0) {
               check = checkEntry(token2, sym_table_index);
               if(check < 0) {
+                a = atoi(token2);
+                if (a != (long)NULL) {
+                  char *str4 = (char*)malloc(sizeof(char) * 10);
+                  littab[lit_table_index].lit_table_index = lit_table_index;
+                  sprintf(str4,"%08X",(unsigned int)a);
+                  str4 = makeLittleEndian(str4);
+                  //printf("Helloooo%s\n",str4);
+                  strcpy(littab[lit_table_index].value,str4);
+                  littab[lit_table_index].sym_table_index = -1;
+                  fprintf(op,"\n%s Littab#%d", token, lit_table_index);  
+                  lit_table_index++;
+                } else {
                 strcpy(symtable[sym_table_index].name,token2);
                 symtable[sym_table_index].defined = 'u';
                 symtable[sym_table_index].address = address+3;
                 symtable[sym_table_index].type = 'l';
+                printf("Hellooooaaa\n");
                 strcpy(symtable[sym_table_index].value,"***");
                 symtable[sym_table_index].sym_table_index = sym_table_index;
-                fprintf(op,"\n%s Symtab#%d", token, sym_table_index);
+                fprintf(op,"\n%s Symtab#%d", token, sym_table_index);  
+                }
                 sym_table_index++;
               } else
                 fprintf(op,"\n%s Symtab#%d", token, check);
