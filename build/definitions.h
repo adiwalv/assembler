@@ -52,4 +52,4 @@ char immediate_output[] = "immediate.i";
 char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, *strH = NULL;
 unsigned long i;
 FILE *ip, *op;
-long a;
+
