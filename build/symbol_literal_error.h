@@ -232,8 +232,7 @@ void generateTables(char *filename){
                 }
                 count++;
               }
-              lit_table_index++;
-              
+              lit_table_index++;              
               symtable[sym_table_index].no_of_items = count;
               symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
               symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
@@ -594,6 +593,7 @@ void generateTables(char *filename){
                   littab[lit_table_index].sym_table_index = -1;
                   fprintf(op,"\n%s Symtab#%d , Littab#%d", token, checkEntry(token2, sym_table_index), lit_table_index);  
                   lit_table_index++;
+                  goto k;
                 } else {
                 strcpy(symtable[sym_table_index].name,token3);
                 symtable[sym_table_index].defined = 'u';
@@ -604,10 +604,10 @@ void generateTables(char *filename){
                 sym_table_index++;
                 }
               }
-              if ((checkEntry(token3, sym_table_index) && checkEntry(token2, sym_table_index)) == 0){
                   fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token2,sym_table_index), checkEntry(token3,sym_table_index));
-                }
-            } // memory to memory not allowed but will require this to fill symtable
+           k: continue;
+            }
+            // memory to memory not allowed but will require this to fill symtable
           }
         }
         else {
@@ -744,6 +744,7 @@ void generateTables(char *filename){
                   littab[lit_table_index].sym_table_index = -1;
                   fprintf(op,"\n%s Littab#%d , Symtab#%d", token, lit_table_index, checkEntry(token2, sym_table_index));
                   lit_table_index++;
+                  goto k2:
                 } else {
                 strcpy(symtable[sym_table_index].name,token1);
                 symtable[sym_table_index].defined = 'u';
@@ -755,9 +756,9 @@ void generateTables(char *filename){
                 }}
                 
                 
-              if ((checkEntry(token1, sym_table_index) && checkEntry(token2, sym_table_index)) == 0){
+             
                   fprintf(op,"\n%s SymTab#%d , Symtab#%d ",token, checkEntry(token1,sym_table_index), checkEntry(token2,sym_table_index));
-                }
+           k2: continue;   
             }
           }
         }
