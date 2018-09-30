@@ -1,3 +1,4 @@
+// Author : Vikas Adiwal
 #include<stdio.h>
 #include<unistd.h>
 #include<string.h>
@@ -42,15 +43,16 @@ void printSource(char *filename);
 void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
 void printImmediateCode(FILE* op);
-void printErrorList(char* filename,int error_table_index, int sym_table_index);
+void printErrorList(char* filename, int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
 char line[150];
-int ch, outer,address = 0, sym_table_index = 1, count = 0, error_table_index = 1, lit_table_index = 1, check;
+int ch, outer, address = 0, sym_table_index = 1, count = 0, \
+  error_table_index = 1, lit_table_index = 1, check, check2;
 int op1, op2;
 char immediate_output[] = "immediate.i";
-char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, *strH = NULL;
-unsigned long i;
+char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
+  *strH = NULL;
+int16_t i;
 FILE *ip, *op;
-
-long a;
+int16_t a;

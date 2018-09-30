@@ -57,7 +57,7 @@ void printErrorList(char *filename,int error_table_index, int sym_table_index){
             error_table_index++;
           }
         }
-        for(outer = 1; outer <= error_table_index; outer++) {
+        for(outer = 1; outer < error_table_index; outer++) {
           if(errors[outer].errorType == 0) {
             printf("\n%s:%d: error: Symbol %s undefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
           }
