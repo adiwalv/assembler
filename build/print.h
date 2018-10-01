@@ -39,15 +39,68 @@ void printLiteralTab(int lit_table_index){
           }
          printf("============================================================================\n");
 }
-
+/**
 void printImmediateCode(FILE* op){
 
   
-  printf("\n\n\tImmediate Code from the file created:");
+  printf("\n\n\tImmediate Code from the file created:\n");
         while ( fgets ( line, sizeof line, op ) != NULL )
           printf("%s", line);
 
 }
+**/
+
+void printImmediateCode(FILE* op, char *filename){
+  token = (char*)malloc(sizeof(char)*100);
+  char source_file[50][50];
+  char immediate[50][50];
+  int i = 0;
+  char space = ' ';
+  FILE *source = fopen(filename, "r");
+  printf("\nIntermediate Code generated for per line in the source:\n\n");
+  while (fgets(line, sizeof line, source) != NULL) {
+     token = strtok(line, "\n\t\r ");
+     if (strcmp(token, "section") == 0) {
+       token = strtok(NULL, "\n\t\r ");
+       if (strcmp(token, ".text") == 0) {
+         break;
+       }
+     }
+  }
+  while ( fgets ( line, sizeof line, source ) != NULL ) {
+    token = strtok(line, "\n\t\r ");
+    if (strcmp(token, "global") == 0) {
+      break;
+    }
+    //if (strcmp(token, "extern") == 0) {
+    //break;
+    //}
+  }
+  while ( fgets ( line, sizeof line, source ) != NULL ) {
+    // fputs ( line, stdout ); /* write the line */
+     strcpy(source_file[i], line);
+     source_file[i][strlen(source_file[i])-1] = space;
+    i++;
+  }
+  i = 0;
+  op = fopen("immediate.i","r");
+  while ( fgets ( line, sizeof line, op ) != NULL ) {
+    //fputs ( line, stdout ); 
+    strcpy(immediate[i], line);
+    //immediate[i][strlen(immediate[i])-1] = space;
+    i++;
+  }
+
+  printf("\t Source File \t\t\t Immediate Code\n\n");
+  for (int j = 0; j < i; j++) {
+    printf("%d\t %s\t\t\t%s", j+1, source_file[j], immediate[j]);
+  }
+/**printf("\n\n\tImmediate Code from the file created:");
+        while ( fgets ( line, sizeof line, op ) != NULL )
+        printf("%s", line);**/
+}
+
+
 
 void printErrorList(char *filename,int error_table_index, int sym_table_index){
   int outer;

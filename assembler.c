@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         if (s_flag)
           printSymTab(sym_table_index);
         if (i_flag)
-          printImmediateCode(op);
+          printImmediateCode(op, argv[optind]);
         if (t_flag)
           printLiteralTab(lit_table_index);
         }

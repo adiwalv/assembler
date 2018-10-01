@@ -46,7 +46,7 @@ int populateLiteralTable(int sym_table_index, int lit_table_index);
 void printSource(char *filename);
 void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
-void printImmediateCode(FILE* op);
+void printImmediateCode(FILE* op, char *filename);
 void printErrorList(char* filename, int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
