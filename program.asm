@@ -17,6 +17,7 @@ main:	mov eax,10
 pqr:	jmp 28888
 	add edx,ebx
 	mov to,o
+	mov vs, 10
 	mov eax,1100
 	add edi,esi
 	mov a,ecx

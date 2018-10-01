@@ -4,14 +4,15 @@
 void printSymTab(int sym_table_index) {
   int outer;
           printf("\n\n\tSym Table:\n");
-        printf("=======================================================================================================================================\n");
-        printf("%12s%12s%12s%12s%12s%12s%30s%10s%18s\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
-        printf("=======================================================================================================================================\n");
+        printf("============================================================================================================================================\n");
+        printf("|%-12s|%-12s|%-12s|%-12s|%-12s|%-12s|%-30s|%-10s|%-18s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
+        printf("============================================================================================================================================\n");
         for (outer = 1; outer < sym_table_index; outer++) {
-          printf ("%12d%12s%12d%12d%12c%12c%30s%10d%18d\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
+          printf ("|%-12d|%-12s|%-12d|%-12d|%-12c|%-12c|%-30s|%-10d|%-18d|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
                   symtable[outer].no_of_items, symtable[outer].type, symtable[outer].defined,
                   symtable[outer].value, symtable[outer].address, symtable[outer].literal_table_link);
         }
+        printf("============================================================================================================================================\n");
 }
 
 void printSource(char *filename){
@@ -29,17 +30,18 @@ void printLiteralTab(int lit_table_index){
   
   printf("\n\n\tLiteral Table:\n");
              
-        printf("==========================================================================\n");
-        printf("%12s%40s%20s\n","Table Index","Value","Symbol Table Index");
-        
-        printf("==========================================================================\n");
+        printf("============================================================================\n");
+        printf("|%-12s|%-40s|%20s|\n","Table Index","Value","Symbol Table Index");
+        printf("============================================================================\n");
         for(outer = 1; outer < lit_table_index; outer++) {
-          printf("%12d%40s%20d\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
+          printf("|%-12d|%-40s|%20d|\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
       
           }
+         printf("============================================================================\n");
 }
 
 void printImmediateCode(FILE* op){
+
   
   printf("\n\n\tImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )

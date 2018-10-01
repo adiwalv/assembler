@@ -1,4 +1,8 @@
 // Author : Vikas Adiwal
+
+#ifndef BUILD_DEFINITIONS_H_
+#define BUILD_DEFINITIONS_H_
+
 #include<stdio.h>
 #include<unistd.h>
 #include<string.h>
@@ -48,11 +52,14 @@ char* makeLittleEndian(char *str);
 
 char line[150];
 int ch, outer, address = 0, sym_table_index = 1, count = 0, \
-  error_table_index = 1, lit_table_index = 1, check, check2;
+  error_table_index = 1, lit_table_index = 1, check, check2,    \
+    entry1, entry2;
 int op1, op2;
 char immediate_output[] = "immediate.i";
 char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
   *strH = NULL;
 int16_t i;
 FILE *ip, *op;
-int16_t a;
+int16_t a, b;
+
+#endif  //  BUILD_DEFINITIONS_H_
