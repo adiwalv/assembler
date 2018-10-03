@@ -35,7 +35,6 @@ struct errorTable {
   int symTab_index;
 }errors[100];
 
-char errorTypes[2][50] = {"Symbol %s undefined", "Symbol %s redefined"};
 
 char* convertStringToHex(char* str);
 char* extract_quoted_string(char *substring, char *token1);
@@ -53,7 +52,7 @@ char* makeLittleEndian(char *str);
 char line[150];
 int ch, outer, address = 0, sym_table_index = 1, count = 0, \
   error_table_index = 1, lit_table_index = 1, check, check2,    \
-    entry1, entry2;
+  entry1, entry2, size;
 int op1, op2;
 char immediate_output[] = "immediate.i";
 char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
@@ -61,5 +60,7 @@ char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
 int16_t i;
 FILE *ip, *op;
 int16_t a, b;
+
+char valid_instructions[][10] = {"mov", "add", "sub", "mul", "jmp", "dec", "inc"};
 
 #endif  //  BUILD_DEFINITIONS_H_

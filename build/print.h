@@ -91,9 +91,9 @@ void printImmediateCode(FILE* op, char *filename){
     i++;
   }
 
-  printf("\t Source File \t\t\t Immediate Code\n\n");
+  printf("\t Source File \t\t\t\t\t\t Immediate Code\n\n");
   for (int j = 0; j < i; j++) {
-    printf("%d\t %s\t\t\t%s", j+1, source_file[j], immediate[j]);
+    printf("%d\t %s\t\t\t\t\t\t%s", j+1, source_file[j], immediate[j]);
   }
 /**printf("\n\n\tImmediate Code from the file created:");
         while ( fgets ( line, sizeof line, op ) != NULL )
@@ -118,6 +118,9 @@ void printErrorList(char *filename,int error_table_index, int sym_table_index){
           }
           if(errors[outer].errorType == 1) {
             printf("\n%s:%d: error: Symbol %s redefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
+          }
+          if(errors[outer].errorType == 2) {
+            printf("\n%s:%d: error: Not a valid instruction",filename, errors[outer].address);
           }
           //printf("\n%s:%d: %s %s",filename,errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
         }

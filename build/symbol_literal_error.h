@@ -1,5 +1,37 @@
 #include "print.h"
 
+int validateInstruction(char *instruction) {
+  size = sizeof(valid_instructions)/10;
+  int flag = -1;
+  for (int i = 0 ; i < 4; i++) {
+    if (strcmp(valid_instructions[i], instruction) == 0)
+      flag = 1;
+  }
+  return flag;
+}
+
+char * strlwr(char * s)
+{
+        char *t = s;
+ 
+        if (!s)
+        {
+                return 0;
+        }
+ 
+        int i = 0;
+        while ( *t != '\0' )
+        {
+                if (*t >= 'A' && *t <= 'Z' )
+                {
+                        *t = *t + ('a' - 'A');
+                }
+                t++;
+        }
+ 
+        return s;
+}
+
 char* convertStringToHex(char* str) {
   unsigned long i;
   char *strH = (char*)malloc(sizeof(char)*100);
@@ -411,6 +443,23 @@ void generateTables(char *filename){
             token1 = strtok(NULL,",");
           }
         }
+        if(strcmp(token,"extern") == 0) {
+          token = strtok(NULL,"\n\t\r ");
+          token1 = strtok(token,",");
+          while(token1) {
+            check = checkEntry(token1, sym_table_index);
+            if (check < 0) {
+            strcpy(symtable[sym_table_index].name,token1);
+            symtable[sym_table_index].defined = 'u';
+            symtable[sym_table_index].address = address + 1;
+            symtable[sym_table_index].type = 'l';
+            strcpy(symtable[sym_table_index].value,"***");
+            symtable[sym_table_index].sym_table_index = sym_table_index;
+            sym_table_index++;
+            token1 = strtok(NULL,",");
+            } else continue;
+          }
+        }
         if (strcmp(&token[strlen(token)-1],":") == 0) {
           token[strlen(token)-1] = '\0';
           check = checkEntry(token,sym_table_index);
@@ -427,7 +476,7 @@ void generateTables(char *filename){
             symtable[check].address = address + 1;
           }
         }
-        if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0)){
+        if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"call") == 0)){
           token = strtok(NULL,"\n\t\r ");
           int check = checkEntry(token,sym_table_index);
           if(check < 0) {
@@ -457,8 +506,20 @@ void generateTables(char *filename){
         token = strtok(line,"\n\t\r ");
         if (strcmp(&token[strlen(token)-1],":") == 0) {
           token = strtok(NULL,"\n\t\r ");
+          //printf("toke is %s", token);
+          if (validateInstruction(strlwr(token)) == -1) {
+            errors[error_table_index].address = address+3;
+              errors[error_table_index].errorType = 2;
+              errors[error_table_index].symTab_index = -1;
+              error_table_index++;
+          }
           token1 = strtok(NULL,"\n\t\r ");
           token2 = strtok(token1,", ");
+           if (token2 == NULL) {
+             //printf("Hello!!!");
+             fprintf(op,"%s\n",token);
+            continue;
+          }
           token3 = strtok(NULL,", ");
           if(token3 == NULL) {
             check = registerTable(token2);
@@ -492,7 +553,8 @@ void generateTables(char *filename){
             } else {
               fprintf(op,"%s Reg#%d\n", token, check);
             }
-          } else {
+          }
+          else {
             op1 = registerTable(token2);
             op2 = registerTable(token3);
             if(op1 < 0 && op2 >= 0) {
@@ -588,6 +650,7 @@ void generateTables(char *filename){
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   littab[lit_table_index].lit_table_index = lit_table_index;
                   entry2 = lit_table_index;
+                  printf("%d---->",entry2);
                   sprintf(str4,"%08X",(unsigned int)a);
                   str4 = makeLittleEndian(str4);
                   //printf("Helloooo%s\n",str4);
@@ -624,9 +687,19 @@ void generateTables(char *filename){
             }
             // memory to memory not allowed but will require this to fill symtable
           }
-        }
-        else {
+        } else {
+          if (validateInstruction(strlwr(token)) == -1) {
+            errors[error_table_index].address = address+3;
+              errors[error_table_index].errorType = 2;
+              errors[error_table_index].symTab_index = -1;
+              error_table_index++;
+          }
           token1 = strtok(NULL,"\n\t\r ,");
+           if (token1 == NULL) {
+             //printf("Hello!!!");
+             fprintf(op,"%s\n",token);
+            continue;
+          }
           token2 = strtok(NULL,"\n\t\r ,");
           if(token2 == NULL) {
             check = registerTable(token1);

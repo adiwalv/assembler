@@ -12,16 +12,19 @@
 	f resd 2
 	z resd 3
 	section .text
-	global main,printf,scanf,zzz
+	global main
+	extern printf,scanf,zzz
 main:	mov eax,10
 pqr:	jmp 28888
 	add edx,ebx
-	mov to,o
+zzz:	mov to,o
 	mov vs, 10
 	mov eax,1100
 	add edi,esi
-	mov a,ecx
+aaaaaaaa: mov a,ecx
 	jmp js
+	pushb
+ask:	pusha
 ajx:	mov ts,20000
 	mov ts,10
 	mov tt, 0
@@ -30,6 +33,8 @@ ajx:	mov ts,20000
 	mov ecx,tmp
 	jmp z
 	jnz tmpasd
-ppp:	jmp 29
+ppp:	jmp 293445667885
+	call aaaaaaaa
 	jmp asd
+	inc 
 	jmp qwr
