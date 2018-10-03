@@ -61,6 +61,6 @@ int16_t i;
 FILE *ip, *op;
 int16_t a, b;
 
-char valid_instructions[][10] = {"mov", "add", "sub", "mul", "jmp", "dec", "inc"};
+char valid_instructions[][10] = {"mov", "add", "sub", "mul", "jmp", "dec", "inc", "call"};
 
 #endif  //  BUILD_DEFINITIONS_H_

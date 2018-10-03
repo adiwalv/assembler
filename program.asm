@@ -1,4 +1,4 @@
-	section .data
+section .data
 	a db "Hello i am","gg",10,0	
 	c db "jj",10,0		
 	b dd 1223,20
