@@ -1,49 +1,21 @@
 #include "print.h"
 #include "validation.h"
 
-
-void insertIntoSystab1(int sym_table_index, char *name, \
-                      char defined, char type, char *value, \
-                       int literal_table_link, int no_of_items, \
-                       char *type_) {
-   symtable[sym_table_index].sym_table_index = sym_table_index;
-    strcpy(symtable[sym_table_index].name, name);
-    symtable[sym_table_index].no_of_items = no_of_items;
-        symtable[sym_table_index].defined = defined ;
-    symtable[sym_table_index].type = type;
-    strcpy(symtable[sym_table_index].value, value);
-    symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-    symtable[sym_table_index].literal_table_link = lit_table_index;
-if (strcmp(type_, "dd") == 0) {
-    symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
-  }
-  if (strcmp(type_, "db") == 0) {
-    symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
-  }
-  
-}
-
-
-void insertIntoSystab(int sym_table_index, char *name, \
-                      char defined, char type, char *value, \
-                       int literal_table_link, int no_of_items, \
-                      int address, char *type_) {
-   symtable[sym_table_index].sym_table_index = sym_table_index;
-    strcpy(symtable[sym_table_index].name, name);
-    symtable[sym_table_index].no_of_items = no_of_items;
-        symtable[sym_table_index].defined = defined ;
-    symtable[sym_table_index].type = type;
-    strcpy(symtable[sym_table_index].value, value);
-    symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-    symtable[sym_table_index].literal_table_link = lit_table_index;
-    symtable[sym_table_index].address = address;
-    if (strcmp(type_, "dd") == 0) {
-    symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
-  }
-  if (strcmp(type_, "db") == 0) {
-    symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
-  }
-  
+void insertIntoSystab(int sym_table_index, char *name, int size, \
+                      int no_of_items, char defined, char type,
+                      char *value,
+                      int address,              \
+                       int literal_table_link,
+                   ) {
+  symtable[sym_table_index].sym_table_index = sym_table_index;
+  strcpy(symtable[sym_table_index].name, name);
+  symtable[sym_table_index].size = size;
+  symtable[sym_table_index].no_of_items = no_of_items;
+  symtable[sym_table_index].defined = defined ;
+  symtable[sym_table_index].type = type;
+  strcpy(symtable[sym_table_index].value, value);
+  symtable[sym_table_index].address = address;
+  symtable[sym_table_index].literal_table_link = lit_table_index;
 }
 
 
@@ -204,9 +176,9 @@ void generateTables(char *filename){
               }
               count++;
             }
-            
-            insertIntoSystab1(sym_table_index, name, 'd', 's', value,   \
-                              lit_table_index, count, "dd");
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+            insertIntoSystab(sym_table_index, name, 4*count, count, 'd', 's', value, \
+                             add,lit_table_index);
             lit_table_index++;
           } else if(strcmp(token,"db") == 0) { 
             count = 0;
@@ -232,10 +204,10 @@ void generateTables(char *filename){
               token = strtok(NULL,",");
               count++;
             }
-         
-            insertIntoSystab1(sym_table_index, name, 'd', 's', value,   \
-                              lit_table_index, count, "db");
-         lit_table_index++;
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+            insertIntoSystab(sym_table_index, name, 1*count, count, 'd', 's', value, \
+                             add,lit_table_index);
+            lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
         }
@@ -267,9 +239,9 @@ void generateTables(char *filename){
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
-            insertIntoSystab(sym_table_index, name, 'm', 's', value,   \
-                             lit_table_index, count, address+2, "dd");
-        lit_table_index++;              
+            insertIntoSystab(sym_table_index, name, 4*count, count, 'm', 's', value, \
+                  address+2,lit_table_index);
+            lit_table_index++;              
           } else if(strcmp(token,"db") == 0) {
             count = 0;
             token = strtok(NULL,",");
@@ -298,8 +270,8 @@ void generateTables(char *filename){
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;  
-            insertIntoSystab(sym_table_index, name, 'm', 's', value,   \
-                             lit_table_index, count, address+2, "db");
+            insertIntoSystab(sym_table_index, name, 1*count, count, 'm', 's', value, \
+                             address+2,lit_table_index);
             lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
@@ -317,92 +289,75 @@ void generateTables(char *filename){
         break;
       check = checkEntry(token,sym_table_index);
       if (check < 0) {
-        strcpy(symtable[sym_table_index].name,token);
+        strcpy(name,token);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
           if(strcmp(token,"resb") == 0) {
-            token = strtok(NULL,"\n\t\r ");
-           
+            token = strtok(NULL,"\n\t\r ");    
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
-            symtable[sym_table_index].literal_table_link = lit_table_index;
             strcpy(littab[lit_table_index].value,hex);
             littab[lit_table_index].sym_table_index = sym_table_index;
-            lit_table_index++;
-            strcpy(symtable[sym_table_index].value,token);
-            symtable[sym_table_index].no_of_items = 0;
-            symtable[sym_table_index].sym_table_index = sym_table_index;
-            symtable[sym_table_index].size = 1 * atoi(token);
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'd';
-            symtable[sym_table_index].type = 's';
+            strcpy(value,token);
+            size = 1 * atoi(token);
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+             insertIntoSystab(sym_table_index, name, size, atoi(token), 'd', 's', value, \
+                             add,lit_table_index);
+lit_table_index++;
+            
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
-           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
-            symtable[sym_table_index].literal_table_link = lit_table_index;
             strcpy(littab[lit_table_index].value,hex);
             littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(value,token);
+            size = 4 * atoi(token);
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+            insertIntoSystab(sym_table_index, name, size, atoi(token), 'd', 's', value, \
+                             add,lit_table_index);
             lit_table_index++;
-            strcpy(symtable[sym_table_index].value,token);
-            symtable[sym_table_index].no_of_items = atoi(token);
-            symtable[sym_table_index].sym_table_index = sym_table_index;
-            symtable[sym_table_index].size = 4 * atoi(token);
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'd';
-            symtable[sym_table_index].type = 's';
           }
           token = strtok(NULL,"\n\t\r");
         }
       }else {
-        strcpy(symtable[sym_table_index].name,token);
+        strcpy(name,token);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
           if(strcmp(token,"resb") == 0) {
             token = strtok(NULL,"\n\t\r ");
-           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
-            symtable[sym_table_index].literal_table_link = lit_table_index;
             strcpy(littab[lit_table_index].value,hex);
             littab[lit_table_index].sym_table_index = sym_table_index;
-            lit_table_index++;
-            strcpy(symtable[sym_table_index].value,token);
-            symtable[sym_table_index].no_of_items = 0;
-            symtable[sym_table_index].sym_table_index = sym_table_index;
-            symtable[sym_table_index].size = 1 * atoi(token);
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'm'; //giving it a flag m for multiple definitions
+            strcpy(value,token);
             errors[error_table_index].address = address+2;
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
-            symtable[sym_table_index].type = 's';
+            size = 1 * atoi(token);
+            insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
+                             address+2,lit_table_index);
+            lit_table_index++;
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
-           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
             symtable[sym_table_index].literal_table_link = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
             littab[lit_table_index].sym_table_index = sym_table_index;
-            lit_table_index++;
-            strcpy(symtable[sym_table_index].value,token);
-            symtable[sym_table_index].no_of_items = atoi(token);
-            symtable[sym_table_index].sym_table_index = sym_table_index;
-            symtable[sym_table_index].size = 4 * atoi(token);
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'm';//giving it a flag m for multiple definitions
+            strcpy(value,token);
             errors[error_table_index].address = address+2;
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
-            symtable[sym_table_index].type = 's';
+            size = 4 * atoi(token);
+            insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
+                             address+2,lit_table_index);
+            lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
         }

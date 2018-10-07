@@ -52,8 +52,8 @@ char* makeLittleEndian(char *str);
 char line[150];
 int ch, outer, address = 0, sym_table_index = 1, count = 0, \
   error_table_index = 1, lit_table_index = 1, check, check2,    \
-  entry1, entry2, size;
-int op1, op2;
+  entry1, entry2, size, add;
+int op1, op2, size;
 char immediate_output[] = "immediate.i";
 char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
   *strH = NULL, *name = NULL, *value = NULL, *hex = NULL, *substring = NULL;
