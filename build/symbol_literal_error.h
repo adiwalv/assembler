@@ -16,6 +16,22 @@ void insertIntoSystab(int sym_table_index, char *name, int size, \
   symtable[sym_table_index].literal_table_link = lit_table_index;
 }
 
+void insertIntoLiteral(int *lit_table_index, char *value, \
+                       int sym_table_index) {
+  littab[*lit_table_index].lit_table_index = *lit_table_index;
+  strcpy(littab[*lit_table_index].value, value);
+  littab[*lit_table_index].sym_table_index = sym_table_index;
+  (*lit_table_index)++;
+}
+
+void insertIntoError(int address, int errorType, int symTab_index, int *error_table_index) {
+  errors[*error_table_index].address = address;
+  errors[*error_table_index].errorType = errorType;
+  errors[*error_table_index].symTab_index = symTab_index;
+  (*error_table_index)++;
+}
+
+
 
 char* convertStringToHex(char* str) {
   unsigned long i;
@@ -134,14 +150,15 @@ int populateLiteralTable(int sym_table_index, int lit_table_index){
 
 
 void generateTables(char *filename){
-   token = (char*)malloc(sizeof(char) * 100);
-   token1 = (char*)malloc(sizeof(char) * 100);
-   token2 = (char*)malloc(sizeof(char) * 100);
-   token3 = (char*)malloc(sizeof(char) * 100);
-   name = (char*)malloc(sizeof(char) * 100);
-   value = (char*)malloc(sizeof(char) * 100);
-   hex = (char*)malloc(sizeof(char)*10);
-   substring = (char*)malloc(sizeof(char)*100);
+  token = (char*)malloc(sizeof(char) * 100);
+  token1 = (char*)malloc(sizeof(char) * 100);
+  token2 = (char*)malloc(sizeof(char) * 100);
+  token3 = (char*)malloc(sizeof(char) * 100);
+  name = (char*)malloc(sizeof(char) * 100);
+  value = (char*)malloc(sizeof(char) * 100);
+  hex = (char*)malloc(sizeof(char)*10);
+  substring = (char*)malloc(sizeof(char)*100);
+  lit_value = (char*)malloc(sizeof(char)*100);
   ip = fopen(filename,"r");
   op = fopen(immediate_output,"w");
   if(ip!=NULL){
@@ -158,54 +175,49 @@ void generateTables(char *filename){
           if(strcmp(token,"dd") == 0) {
             token = strtok(NULL,"\n\t\r ");
             count = 0;
+            bzero(value,100);
+            bzero(lit_value,100);
             strcpy(value,token);
             token1 = strtok(token,",");
             sprintf(hex,"%08X",atoi(token1));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             while(token1) {
               token1 = strtok(NULL,",");
               if(token1 != NULL) {
                 sprintf(hex,"%08X",atoi(token1));
                 hex = makeLittleEndian(hex);
-                strcat(littab[lit_table_index].value,hex);
+                strcat(lit_value,hex);
               }
               count++;
             }
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, 4*count, count, 'd', 's', value, 
-                             add,lit_table_index);
-            lit_table_index++;
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
           } else if(strcmp(token,"db") == 0) { 
             count = 0;
             token = strtok(NULL,",");
             bzero(value,100);
+            bzero(lit_value,100);
             while(token) {
               if(token[0] == '\"') {
                 substring = extract_quoted_string(substring,token);
-                //printf("%s",substring);
                 count+= strlen(substring);
-                //printf("count: %d",count);
                 strcat(value,substring);
-                littab[lit_table_index].lit_table_index = lit_table_index;
-                strcat(littab[lit_table_index].value,convertStringToHex(substring));
-                littab[lit_table_index].sym_table_index = sym_table_index;
+                strcat(lit_value,convertStringToHex(substring));
               }
               if(strcmp(token,"10") == 0) {
-                strcat(littab[lit_table_index].value,"0A");
+                strcat(lit_value,"0A");
               }
               if(*token == '0') {
-                strcat(littab[lit_table_index].value,"00");
+                strcat(lit_value,"00");
               }
               token = strtok(NULL,",");
               count++;
             }
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, 1*count, count, 'd', 's', value, \
-                             add,lit_table_index);
-            lit_table_index++;
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
           }
           token = strtok(NULL,"\n\t\r");
         }
@@ -217,62 +229,50 @@ void generateTables(char *filename){
             token = strtok(NULL,"\n\t\r ");
             count = 0;
             bzero(value, 100);
+            bzero(lit_value,100);
             strcpy(value,token);
             token1 = strtok(token,",");
             sprintf(hex,"%08X",atoi(token1));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             while(token1) {
               token1 = strtok(NULL,",");
               if(token1 != NULL) {
                 sprintf(hex,"%08X",atoi(token1));
                 hex = makeLittleEndian(hex);
-                strcat(littab[lit_table_index].value,hex);
+                strcat(lit_value,hex);
               }
               count++;
             }
-            errors[error_table_index].address = address+2;
-            errors[error_table_index].errorType = 1;
-            errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, 4*count, count, 'm', 's', value, \
-                  add,lit_table_index);
-            lit_table_index++;              
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
+            insertIntoError(address+2, 1 , sym_table_index, &error_table_index);
           } else if(strcmp(token,"db") == 0) {
             count = 0;
             token = strtok(NULL,",");
             bzero(value, 100);
+            bzero(lit_value,100);
             while(token) {
               if(token[0] == '\"') {
                 substring = extract_quoted_string(substring,token);
-                //printf("%s",substring);
                 count+= strlen(substring);
-                //printf("count: %d",count);
                 strcat(value,substring);
-                littab[lit_table_index].lit_table_index = lit_table_index;
-                strcat(littab[lit_table_index].value,convertStringToHex(substring));
-                littab[lit_table_index].sym_table_index = sym_table_index;
+                strcat(lit_value,convertStringToHex(substring));
               }
               if(strcmp(token,"10") == 0) {
-                strcat(littab[lit_table_index].value,"0A"); 
+                strcat(lit_value,"0A"); 
               }
               if(*token == '0') {
-                strcat(littab[lit_table_index].value,"00");
+                strcat(lit_value,"00");
               }
               token = strtok(NULL,",");
               count++;
-            }
-            errors[error_table_index].address = address+2;
-            errors[error_table_index].errorType = 1;
-            errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+            }       
             insertIntoSystab(sym_table_index, name, 1*count, count, 'm', 's', value, \
-                             add,lit_table_index);
-            lit_table_index++;
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
+            insertIntoError(address+2, 1 , sym_table_index, &error_table_index);
           }
           token = strtok(NULL,"\n\t\r");
         }
@@ -289,6 +289,8 @@ void generateTables(char *filename){
         break;
       check = checkEntry(token,sym_table_index);
       if (check < 0) {
+        bzero(value, 100);
+        bzero(lit_value,100);            
         strcpy(name,token);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
@@ -296,33 +298,28 @@ void generateTables(char *filename){
             token = strtok(NULL,"\n\t\r ");    
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             strcpy(value,token);
-            size = 1 * atoi(token);
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-             insertIntoSystab(sym_table_index, name, size, atoi(token), 'd', 's', value, \
-                             add,lit_table_index);
-lit_table_index++;
+            insertIntoSystab(sym_table_index, name, 1 * atoi(token), atoi(token), 'd', 's', value, \
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
             
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             strcpy(value,token);
-            size = 4 * atoi(token);
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            insertIntoSystab(sym_table_index, name, size, atoi(token), 'd', 's', value, \
-                             add,lit_table_index);
-            lit_table_index++;
-          }
+            insertIntoSystab(sym_table_index, name, 1 * atoi(token), atoi(token), 'd', 's', value, \
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
+         }
           token = strtok(NULL,"\n\t\r");
         }
       }else {
+        bzero(value, 100);
+            bzero(lit_value,100);
+            
         strcpy(name,token);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
@@ -330,36 +327,22 @@ lit_table_index++;
             token = strtok(NULL,"\n\t\r ");
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            strcpy(littab[lit_table_index].value,hex);
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             strcpy(value,token);
-            errors[error_table_index].address = address+2;
-            errors[error_table_index].errorType = 1;
-            errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;
-            size = 1 * atoi(token);
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
-                             add,lit_table_index);
-            lit_table_index++;
+            insertIntoSystab(sym_table_index, name, 1 * atoi(token), atoi(token), 'm', 's', value, \
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
+            insertIntoError(address+2, 1 , sym_table_index, &error_table_index);
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
-            littab[lit_table_index].lit_table_index = lit_table_index;
-            symtable[sym_table_index].literal_table_link = lit_table_index;
-            littab[lit_table_index].sym_table_index = sym_table_index;
+            strcpy(lit_value,hex);
             strcpy(value,token);
-            errors[error_table_index].address = address+2;
-            errors[error_table_index].errorType = 1;
-            errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;
-            size = 4 * atoi(token);
-            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
-                             add,lit_table_index);
-            lit_table_index++;
+            insertIntoSystab(sym_table_index, name,  4 * atoi(token), atoi(token), 'm', 's', value, \
+                             symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
+            insertIntoLiteral(&lit_table_index, lit_value, sym_table_index);
+            insertIntoError(address+2, 1 , sym_table_index, &error_table_index);
           }
           token = strtok(NULL,"\n\t\r");
         }
@@ -454,15 +437,11 @@ lit_table_index++;
         token = strtok(NULL,"\n\t\r ");
         //printf("toke is %s", token);
         if (validateInstruction(strlwr(token)) == -1) {
-          errors[error_table_index].address = address+3;
-          errors[error_table_index].errorType = 2;
-          errors[error_table_index].symTab_index = -1;
-          error_table_index++;
+          insertIntoError(address+3, 2 , -1, &error_table_index);
         }
         token1 = strtok(NULL,"\n\t\r ");
         token2 = strtok(token1,", ");
         if (token2 == NULL) {
-          //printf("Hello!!!");
           fprintf(op,"%s\n",token);
           continue;
         }
@@ -596,7 +575,6 @@ lit_table_index++;
                 char *str4 = (char*)malloc(sizeof(char) * 10);
                 littab[lit_table_index].lit_table_index = lit_table_index;
                 entry2 = lit_table_index;
-                printf("%d---->",entry2);
                 sprintf(str4,"%08X",(unsigned int)a);
                 str4 = makeLittleEndian(str4);
                 //printf("Helloooo%s\n",str4);

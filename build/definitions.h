@@ -56,7 +56,8 @@ int ch, outer, address = 0, sym_table_index = 1, count = 0, \
 int op1, op2, size;
 char immediate_output[] = "immediate.i";
 char *token = NULL, *token1 = NULL, *token2 = NULL, *token3 = NULL, \
-  *strH = NULL, *name = NULL, *value = NULL, *hex = NULL, *substring = NULL;
+  *strH = NULL, *name = NULL, *value = NULL, *hex = NULL, \
+  *substring = NULL, *lit_value = NULL;
 int16_t i;
 FILE *ip, *op;
 int16_t a, b;

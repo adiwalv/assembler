@@ -11,6 +11,8 @@ section .data
 	z resb 10
 	f resd 2
 	z resd 3
+	z resb 11
+	z resd 3
 	section .text
 	global main
 	extern printf,scanf,zzz
