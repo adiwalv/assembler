@@ -6,17 +6,44 @@ void insertIntoSystab1(int sym_table_index, char *name, \
                       char defined, char type, char *value, \
                        int literal_table_link, int no_of_items, \
                        char *type_) {
-  if (strcmp(type_, "dd") == 0) {
-    symtable[sym_table_index].sym_table_index = sym_table_index;
+   symtable[sym_table_index].sym_table_index = sym_table_index;
     strcpy(symtable[sym_table_index].name, name);
     symtable[sym_table_index].no_of_items = no_of_items;
-    symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
-    symtable[sym_table_index].defined = defined ;
+        symtable[sym_table_index].defined = defined ;
     symtable[sym_table_index].type = type;
     strcpy(symtable[sym_table_index].value, value);
     symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
     symtable[sym_table_index].literal_table_link = lit_table_index;
+if (strcmp(type_, "dd") == 0) {
+    symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
   }
+  if (strcmp(type_, "db") == 0) {
+    symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
+  }
+  
+}
+
+
+void insertIntoSystab(int sym_table_index, char *name, \
+                      char defined, char type, char *value, \
+                       int literal_table_link, int no_of_items, \
+                      int address, char *type_) {
+   symtable[sym_table_index].sym_table_index = sym_table_index;
+    strcpy(symtable[sym_table_index].name, name);
+    symtable[sym_table_index].no_of_items = no_of_items;
+        symtable[sym_table_index].defined = defined ;
+    symtable[sym_table_index].type = type;
+    strcpy(symtable[sym_table_index].value, value);
+    symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
+    symtable[sym_table_index].literal_table_link = lit_table_index;
+    symtable[sym_table_index].address = address;
+    if (strcmp(type_, "dd") == 0) {
+    symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
+  }
+  if (strcmp(type_, "db") == 0) {
+    symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
+  }
+  
 }
 
 
@@ -143,6 +170,8 @@ void generateTables(char *filename){
    token3 = (char*)malloc(sizeof(char) * 100);
    name = (char*)malloc(sizeof(char) * 100);
    value = (char*)malloc(sizeof(char) * 100);
+   hex = (char*)malloc(sizeof(char)*10);
+   substring = (char*)malloc(sizeof(char)*100);
   ip = fopen(filename,"r");
   op = fopen(immediate_output,"w");
   if(ip!=NULL){
@@ -154,14 +183,12 @@ void generateTables(char *filename){
       check = checkEntry(token,sym_table_index); // checks for entries in the symtable, returns -1 if no entry and symtable index if entry exists
       if (check < 0) {
         strcpy(name,token);
-        printf("%s,---", name);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
           if(strcmp(token,"dd") == 0) {
             token = strtok(NULL,"\n\t\r ");
             count = 0;
             strcpy(value,token);
-            char *hex = (char*)malloc(sizeof(char)*10);
             token1 = strtok(token,",");
             sprintf(hex,"%08X",atoi(token1));
             hex = makeLittleEndian(hex);
@@ -177,22 +204,22 @@ void generateTables(char *filename){
               }
               count++;
             }
-            lit_table_index++;
+            
             insertIntoSystab1(sym_table_index, name, 'd', 's', value,   \
                               lit_table_index, count, "dd");
+            lit_table_index++;
           } else if(strcmp(token,"db") == 0) { 
             count = 0;
-            char* substring = (char*)malloc(sizeof(char)*100);
             token = strtok(NULL,",");
+            bzero(value,100);
             while(token) {
               if(token[0] == '\"') {
                 substring = extract_quoted_string(substring,token);
                 //printf("%s",substring);
                 count+= strlen(substring);
                 //printf("count: %d",count);
-                strcat(symtable[sym_table_index].value,substring);
+                strcat(value,substring);
                 littab[lit_table_index].lit_table_index = lit_table_index;
-                symtable[sym_table_index].literal_table_link = lit_table_index;
                 strcat(littab[lit_table_index].value,convertStringToHex(substring));
                 littab[lit_table_index].sym_table_index = sym_table_index;
               }
@@ -205,32 +232,26 @@ void generateTables(char *filename){
               token = strtok(NULL,",");
               count++;
             }
-            lit_table_index++;
-            free(substring);
-            symtable[sym_table_index].no_of_items = count;
-            symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'd';
-            symtable[sym_table_index].type = 's';
-            symtable[sym_table_index].sym_table_index = sym_table_index;
+         
+            insertIntoSystab1(sym_table_index, name, 'd', 's', value,   \
+                              lit_table_index, count, "db");
+         lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
         }
       } else {   
-        strcpy(symtable[sym_table_index].name,token);
+        strcpy(name,token);
         token = strtok(NULL, "\n\t\r ");
         while(token) {
           if(strcmp(token,"dd") == 0) {
             token = strtok(NULL,"\n\t\r ");
             count = 0;
-            strcpy(symtable[sym_table_index].value,token);
-            symtable[sym_table_index].sym_table_index = sym_table_index;
+            bzero(value, 100);
+            strcpy(value,token);
             token1 = strtok(token,",");
-            char *hex = (char*)malloc(sizeof(char)*8);
             sprintf(hex,"%08X",atoi(token1));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
-            symtable[sym_table_index].literal_table_link = lit_table_index;
             strcpy(littab[lit_table_index].value,hex);
             littab[lit_table_index].sym_table_index = sym_table_index;
             while(token1) {
@@ -242,29 +263,25 @@ void generateTables(char *filename){
               }
               count++;
             }
-            lit_table_index++;              
-            symtable[sym_table_index].no_of_items = count;
-            symtable[sym_table_index].size = 4 * symtable[sym_table_index].no_of_items;
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'm';
             errors[error_table_index].address = address+2;
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
-            symtable[sym_table_index].type = 's';
+            insertIntoSystab(sym_table_index, name, 'm', 's', value,   \
+                             lit_table_index, count, address+2, "dd");
+        lit_table_index++;              
           } else if(strcmp(token,"db") == 0) {
             count = 0;
-            char* substring = (char*)malloc(sizeof(char)*100);
             token = strtok(NULL,",");
+            bzero(value, 100);
             while(token) {
               if(token[0] == '\"') {
                 substring = extract_quoted_string(substring,token);
                 //printf("%s",substring);
                 count+= strlen(substring);
                 //printf("count: %d",count);
-                strcat(symtable[sym_table_index].value,substring);
+                strcat(value,substring);
                 littab[lit_table_index].lit_table_index = lit_table_index;
-                symtable[sym_table_index].literal_table_link = lit_table_index;
                 strcat(littab[lit_table_index].value,convertStringToHex(substring));
                 littab[lit_table_index].sym_table_index = sym_table_index;
               }
@@ -277,18 +294,13 @@ void generateTables(char *filename){
               token = strtok(NULL,",");
               count++;
             }
-            free(substring);
-            lit_table_index++;
-            symtable[sym_table_index].no_of_items = count;
-            symtable[sym_table_index].size = 1 * symtable[sym_table_index].no_of_items;
-            symtable[sym_table_index].address = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            symtable[sym_table_index].defined = 'm';
             errors[error_table_index].address = address+2;
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;
-            symtable[sym_table_index].type = 's';
-            symtable[sym_table_index].sym_table_index = sym_table_index;
+            error_table_index++;  
+            insertIntoSystab(sym_table_index, name, 'm', 's', value,   \
+                             lit_table_index, count, address+2, "db");
+            lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
         }
@@ -310,7 +322,7 @@ void generateTables(char *filename){
         while(token) {
           if(strcmp(token,"resb") == 0) {
             token = strtok(NULL,"\n\t\r ");
-            char *hex = (char*)malloc(sizeof(char)*8);
+           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
@@ -327,7 +339,7 @@ void generateTables(char *filename){
             symtable[sym_table_index].type = 's';
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
-            char *hex = (char*)malloc(sizeof(char)*8);
+           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
@@ -351,7 +363,7 @@ void generateTables(char *filename){
         while(token) {
           if(strcmp(token,"resb") == 0) {
             token = strtok(NULL,"\n\t\r ");
-            char *hex = (char*)malloc(sizeof(char)*8);
+           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
@@ -372,7 +384,7 @@ void generateTables(char *filename){
             symtable[sym_table_index].type = 's';
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
-            char *hex = (char*)malloc(sizeof(char)*8);
+           
             sprintf(hex,"%08X",atoi(token));
             hex = makeLittleEndian(hex);
             littab[lit_table_index].lit_table_index = lit_table_index;
