@@ -2,11 +2,9 @@
 #include "validation.h"
 
 void insertIntoSystab(int sym_table_index, char *name, int size, \
-                      int no_of_items, char defined, char type,
-                      char *value,
-                      int address,              \
-                       int literal_table_link,
-                   ) {
+                      int no_of_items, char defined, char type, \
+                      char *value, int address, \
+                      int literal_table_link) {
   symtable[sym_table_index].sym_table_index = sym_table_index;
   strcpy(symtable[sym_table_index].name, name);
   symtable[sym_table_index].size = size;
@@ -177,7 +175,7 @@ void generateTables(char *filename){
               count++;
             }
             add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
-            insertIntoSystab(sym_table_index, name, 4*count, count, 'd', 's', value, \
+            insertIntoSystab(sym_table_index, name, 4*count, count, 'd', 's', value, 
                              add,lit_table_index);
             lit_table_index++;
           } else if(strcmp(token,"db") == 0) { 
@@ -239,8 +237,9 @@ void generateTables(char *filename){
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, 4*count, count, 'm', 's', value, \
-                  address+2,lit_table_index);
+                  add,lit_table_index);
             lit_table_index++;              
           } else if(strcmp(token,"db") == 0) {
             count = 0;
@@ -269,9 +268,10 @@ void generateTables(char *filename){
             errors[error_table_index].address = address+2;
             errors[error_table_index].errorType = 1;
             errors[error_table_index].symTab_index = sym_table_index;;
-            error_table_index++;  
+            error_table_index++;
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, 1*count, count, 'm', 's', value, \
-                             address+2,lit_table_index);
+                             add,lit_table_index);
             lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
@@ -339,8 +339,9 @@ lit_table_index++;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
             size = 1 * atoi(token);
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
-                             address+2,lit_table_index);
+                             add,lit_table_index);
             lit_table_index++;
           } else if(strcmp(token,"resd") == 0) {
             token = strtok(NULL,"\n\t\r ");
@@ -355,8 +356,9 @@ lit_table_index++;
             errors[error_table_index].symTab_index = sym_table_index;;
             error_table_index++;
             size = 4 * atoi(token);
+            add = symtable[sym_table_index-1].address + symtable[sym_table_index-1].size;
             insertIntoSystab(sym_table_index, name, size, atoi(token), 'm', 's', value, \
-                             address+2,lit_table_index);
+                             add,lit_table_index);
             lit_table_index++;
           }
           token = strtok(NULL,"\n\t\r");
