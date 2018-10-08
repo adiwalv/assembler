@@ -31,7 +31,7 @@ void printLiteralTab(int lit_table_index){
   printf("\n\n\tLiteral Table:\n");
              
         printf("============================================================================\n");
-        printf("|%-12s|%-40s|%20s|\n","Table Index","Value","Symbol Table Index");
+        printf("|%-12s|%-40s|%20s|\n","Table Index","Hex Value","Symbol Table Index");
         printf("============================================================================\n");
         for(outer = 1; outer < lit_table_index; outer++) {
           printf("|%-12d|%-40s|%20d|\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].sym_table_index);
