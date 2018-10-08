@@ -1,8 +1,8 @@
 section .data
-	a db "Hello i am","gg",10,0	
+	a db "Hello i am","gg",10,10,0	
 	c db "jj",10,0		
 	b dd 1223,20
-	b db "Hello i am","gh",10,0
+	b db "Hello i am","gh",10,10,0
 	t dd 1120,12,34,5
 	a db "hel",10,0
 	b dd 15			

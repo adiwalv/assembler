@@ -26,6 +26,7 @@ struct symtab {
 struct literaltab {
   int lit_table_index;
   char value[100];
+  char original_value[100];
   int sym_table_index;
 }littab[100];
 
