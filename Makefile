@@ -1,5 +1,11 @@
 all:
-	gcc -o assembler assembler.c
+	gcc -g -o assembler assembler.c
 
 clean:
-	rm assembler immediate.i
+	rm assembler immediate.i 
+
+install:
+	sudo cp assembler /usr/bin/
+
+count:
+	wc build/definitions.h build/print.h build/symbol_literal_error.h assembler.c -l
