@@ -657,6 +657,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
               if (a != (long)NULL || *token2 == '0') {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   entry1 = lit_table_index;
+                  printf("%d---------\n", entry1);
                   sprintf(str4,"%08X",(unsigned int)a);
                   str4 = makeLittleEndian(str4);
                   strcpy(lit_value,str4);
@@ -674,6 +675,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
                 if (a != (long)NULL || *token1 == '0') {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   entry2 = lit_table_index;
+                  printf("%dppppp",entry2);
                   sprintf(str4,"%08X",(unsigned int)a);
                   str4 = makeLittleEndian(str4);
                   strcpy(lit_value,str4);
@@ -685,7 +687,6 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
                   sym_table_index++;
                 }
               }
-              
               a = atoi(token1);
               b = atoi(token2);
               if((a != (long)NULL || *token1 == '0') && (b != (long)NULL || *token2 == '0')) {
@@ -695,6 +696,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
                 fprintf(op,"%s Littab#%d , Symtab#%d\n", token, entry1, checkEntry(token2, sym_table_index));  
               }
               else if((a == (long)NULL || *token1 != '0') && (b != (long)NULL || *token2 == '0')) {
+                printf("%d.......",entry2);
                 fprintf(op,"%s Symtab#%d , Littab#%d\n", token, checkEntry(token1, sym_table_index), entry2);  
               }
               else if((a == (long)NULL || *token1 != '0') && (b == (long)NULL || *token2 != '0')) {
@@ -702,29 +704,17 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
               }
           }
         }
-        
       }
-        address++;
+      address++;
     }
     fclose(op);
     op = fopen(immediate_output,"r");
     rewind(ip);
     lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
     printErrorList(filename,error_table_index, sym_table_index);
-    fclose(ip);
-    
+    fclose(ip); 
   } else {
     perror(filename);
     exit(0);
   }
-  /**
-        free(token);
-    free(token2);
-    free(token3);
-    free(name);
-    free(value);
-    free(hex);
-    free(substring);
-    free(lit_value);
-  **/
 }
