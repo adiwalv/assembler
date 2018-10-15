@@ -17,8 +17,7 @@ void sort_instructions() {
 }
 
 
-int validateMnemonic(char *instruction) {
-  sort_instructions();
+int findInstructions(char *instruction) {
   int low,high,mid;
   low=0;
   high= instruction_set_size - 1;
@@ -27,6 +26,7 @@ int validateMnemonic(char *instruction) {
     mid=(low+high)/2;
     if (strcmp(instruction,valid_instructions[mid])==0)
     {
+      //  printf("\nIndex of %s is %d",valid_instructions[mid],mid);
       return mid;
     }
     else if(strcmp(instruction,valid_instructions[mid])>0)
@@ -41,6 +41,14 @@ int validateMnemonic(char *instruction) {
     }
   }
   return -1;
+}
+
+
+
+int validateMnemonic(char *instruction) {
+  sort_instructions();
+  int validate = findInstructions(instruction);
+  return validate;
 }
 
 char * strlwr(char * s) {
