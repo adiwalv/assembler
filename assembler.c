@@ -38,6 +38,11 @@ int main(int argc, char *argv[]) {
           printImmediateCode(op, argv[optind]);
         if (t_flag)
           printLiteralTab(lit_table_index);
+        if (l_flag) {
+          if (error_table_index > 1) {
+            generateLST();
+          }
         }
+      }
     }
 }

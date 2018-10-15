@@ -1,5 +1,20 @@
 #include "print.h"
 
+char * strlwr(char * s) {
+  char *t = s;
+  if (!s)
+    return 0;
+  int i = 0;
+  while ( *t != '\0' ) {
+    if (*t >= 'A' && *t <= 'Z') {
+      *t = *t + ('a' - 'A');
+    }
+    t++;
+  }
+  return s;
+}
+
+
 void sort_instructions() {
   char temp[20];
   for (int i = 0; i < instruction_set_size - 1 ; i++)
@@ -44,23 +59,34 @@ int findInstructions(char *instruction) {
 }
 
 
-
 int validateMnemonic(char *instruction) {
   sort_instructions();
-  int validate = findInstructions(instruction);
-  return validate;
-}
-
-char * strlwr(char * s) {
-  char *t = s;
-  if (!s)
-    return 0;
-  int i = 0;
-  while ( *t != '\0' ) {
-    if (*t >= 'A' && *t <= 'Z') {
-      *t = *t + ('a' - 'A');
+  int flag = findInstructions(instruction);
+  if(flag != -1) {
+    if(strcmp(instruction,"add") == 0) {
+      printf("Hello1");
     }
-    t++;
+    if(strcmp(instruction,"call") == 0) {
+      printf("Hello2");
+    }
+    if(strcmp(instruction,"dec") == 0) {
+      printf("Hello3");
+    }
+    if(strcmp(instruction,"inc") == 0) {
+      printf("Hello4");
+    }
+    if(strcmp(instruction,"jmp") == 0) {
+      printf("Hello5");
+    }
+    if(strcmp(instruction,"mov") == 0) {
+      printf("Hello6");
+    }
+    if(strcmp(instruction,"mul") == 0) {
+      printf("Hello7");
+    }
+    if(strcmp(instruction,"sub") == 0) {
+      printf("Hello8");
+    }
   }
-  return s;
+  return flag;
 }
