@@ -102,35 +102,44 @@ void printImmediateCode(FILE* op, char *filename){
 
 
 
-void printErrorList(char *filename,int error_table_index, int sym_table_index){
+int printErrorList(char *filename, int error_table_index, int sym_table_index) {
   int outer;
-  for(outer = 1; outer <= sym_table_index; outer++) {
-          if(symtable[outer].defined == 'u') {
+  for (outer = 1; outer <= sym_table_index; outer++) {
+          if (symtable[outer].defined == 'u') {
             errors[error_table_index].address = symtable[outer].address;
             errors[error_table_index].errorType = 0;
             errors[error_table_index].symTab_index = outer;
             error_table_index++;
           }
         }
-        for(outer = 1; outer < error_table_index; outer++) {
-          if(errors[outer].errorType == 0) {
-            printf("\n%s:%d: error: Symbol %s undefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
+  if (error_table_index > 1) {
+        for (outer = 1; outer < error_table_index; outer++) {
+          if (errors[outer].errorType == 0) {
+            printf("\n%s:%d: error: Symbol %s undefined", filename, \
+                   errors[outer].address, \
+                   symtable[errors[outer].symTab_index].name);
           }
-          if(errors[outer].errorType == 1) {
-            printf("\n%s:%d: error: Symbol %s redefined",filename,errors[outer].address,symtable[errors[outer].symTab_index].name);
+          if (errors[outer].errorType == 1) {
+            printf("\n%s:%d: error: Symbol %s redefined", filename, \
+                   errors[outer].address, \
+                   symtable[errors[outer].symTab_index].name);
           }
-          if(errors[outer].errorType == 2) {
-            printf("\n%s:%d: error: Not a valid instruction",filename, errors[outer].address);
+          if (errors[outer].errorType == 2) {
+            printf("\n%s:%d: error: Not a valid instruction", filename, \
+                   errors[outer].address);
           }
-          //printf("\n%s:%d: %s %s",filename,errors[outer].address,symtable[errors[outer].symTab_index].name,errorTypes[errors[outer].errorType]);
         }
+  } else {
+    printf("\nNo errors reported!");
+  }
+  return error_table_index;
 }
 
-void printUsage(char *argv){
-   printf("Usage: %s file_name [-options] [-h for help]\n",argv);
+void printUsage(char *argv) {
+  printf("Usage: %s file_name [-options] [-h for help]\n", argv);
 }
 
-void printHelp(){
+void printHelp() {
      printf("\nOptions:\n-p : To print source program.\n-s : To print symbol table\n-i : To print immediate code\n-t : To print literal table\n-l : To print lst of the source file");
 }
 

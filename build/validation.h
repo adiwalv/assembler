@@ -1,18 +1,46 @@
+#include "print.h"
 
-int validateInstruction(char *instruction) {
-  size = sizeof(valid_instructions)/10;
-  int flag = -1;
-  for (int i = 0 ; i < 4; i++) {
-    if (strcmp(valid_instructions[i], instruction) == 0)
-      flag = 1;
-  }
-  if (flag == 1) {
-    //  printf("%s-->", instruction);
-    if (strcmp(instruction, "mov") == 0) {
-      
+void sort_instructions() {
+  char temp[20];
+  for (int i = 0; i < instruction_set_size - 1 ; i++)
+  {
+    for (int j = i + 1; j < instruction_set_size; j++)
+    {
+      if (strcmp(valid_instructions[i], valid_instructions[j]) > 0) 
+      {
+        strcpy(temp, valid_instructions[i]);
+        strcpy(valid_instructions[i], valid_instructions[j]);
+        strcpy(valid_instructions[j], temp);
+      }
     }
   }
-  return flag;
+}
+
+
+int validateMnemonic(char *instruction) {
+  sort_instructions();
+  int low,high,mid;
+  low=0;
+  high= instruction_set_size - 1;
+  while(low<=high)
+  {
+    mid=(low+high)/2;
+    if (strcmp(instruction,valid_instructions[mid])==0)
+    {
+      return mid;
+    }
+    else if(strcmp(instruction,valid_instructions[mid])>0)
+    {
+      high=high;
+      low=mid+1;
+    }
+    else
+    {
+      low=low;
+      high=mid-1;
+    }
+  }
+  return -1;
 }
 
 char * strlwr(char * s) {

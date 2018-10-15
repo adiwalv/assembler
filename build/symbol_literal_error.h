@@ -1,4 +1,3 @@
-#include "print.h"
 #include "validation.h"
 
 void insertIntoSystab(int sym_table_index, char *name, int size, \
@@ -425,7 +424,7 @@ void generateTables(char *filename){
       token = strtok(line,"\n\t\r ");
       if (strcmp(&token[strlen(token)-1],":") == 0) {
         token = strtok(NULL,"\n\t\r ");
-        if (validateInstruction(strlwr(token)) == -1) {
+        if (validateMnemonic(strlwr(token)) == -1) {
           insertIntoError(address+3, 2 , -1, &error_table_index);
         }
         token1 = strtok(NULL,"\n\t\r ");
@@ -473,8 +472,7 @@ void generateTables(char *filename){
                 str4 = makeLittleEndian(str4);
                 strcpy(lit_value,str4);
                 fprintf(op,"%s Littab#%d , Reg#%d\n", token, lit_table_index, op2);
-                
-insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
+                insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
               } else {
                 insertIntoSystab(sym_table_index, token2,  -1, -1, 'u', 'l', "***", \
                                  address + 3, -1);
@@ -563,7 +561,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
           // memory to memory not allowed but will require this to fill symtable
           }
       } else {
-        if (validateInstruction(strlwr(token)) == -1) {
+        if (validateMnemonic(strlwr(token)) == -1) {
           insertIntoError(address+3, 2 , -1, &error_table_index);
         }
         token1 = strtok(NULL,"\n\t\r ,");
@@ -657,7 +655,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
               if (a != (long)NULL || *token2 == '0') {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   entry1 = lit_table_index;
-                  printf("%d---------\n", entry1);
+                  // printf("%d---------\n", entry1);
                   sprintf(str4,"%08X",(unsigned int)a);
                   str4 = makeLittleEndian(str4);
                   strcpy(lit_value,str4);
@@ -675,7 +673,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
                 if (a != (long)NULL || *token1 == '0') {
                   char *str4 = (char*)malloc(sizeof(char) * 10);
                   entry2 = lit_table_index;
-                  printf("%dppppp",entry2);
+                  // printf("%dppppp",entry2);
                   sprintf(str4,"%08X",(unsigned int)a);
                   str4 = makeLittleEndian(str4);
                   strcpy(lit_value,str4);
@@ -696,7 +694,7 @@ insertIntoLiteral(&lit_table_index, lit_value, token2,  -1);
                 fprintf(op,"%s Littab#%d , Symtab#%d\n", token, entry1, checkEntry(token2, sym_table_index));  
               }
               else if((a == (long)NULL || *token1 != '0') && (b != (long)NULL || *token2 == '0')) {
-                printf("%d.......",entry2);
+                //   printf("%d.......",entry2);
                 fprintf(op,"%s Symtab#%d , Littab#%d\n", token, checkEntry(token1, sym_table_index), entry2);  
               }
               else if((a == (long)NULL || *token1 != '0') && (b == (long)NULL || *token2 != '0')) {

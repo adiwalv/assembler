@@ -47,7 +47,7 @@ void printSource(char *filename);
 void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
 void printImmediateCode(FILE* op, char *filename);
-void printErrorList(char* filename, int error_table_index, int sym_table_index);
+int printErrorList(char* filename, int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
 char line[150];
@@ -63,6 +63,8 @@ int16_t i;
 FILE *ip, *op;
 int16_t a, b;
 
-char valid_instructions[][10] = {"mov", "add", "sub", "mul", "jmp", "dec", "inc", "call"};
+char valid_instructions[8][10] = {"mov", "add", "sub", "mul", \
+                                 "jmp", "dec", "inc", "call"};
+int instruction_set_size = sizeof(valid_instructions)/10;
 
 #endif  //  BUILD_DEFINITIONS_H_
