@@ -62,31 +62,55 @@ int findInstructions(char *instruction) {
 int validateMnemonic(char *instruction) {
   sort_instructions();
   int flag = findInstructions(instruction);
-  if(flag != -1) {
-    if(strcmp(instruction,"add") == 0) {
-      printf("Hello1");
-    }
-    if(strcmp(instruction,"call") == 0) {
-      printf("Hello2");
-    }
-    if(strcmp(instruction,"dec") == 0) {
-      printf("Hello3");
-    }
-    if(strcmp(instruction,"inc") == 0) {
-      printf("Hello4");
-    }
-    if(strcmp(instruction,"jmp") == 0) {
-      printf("Hello5");
-    }
-    if(strcmp(instruction,"mov") == 0) {
-      printf("Hello6");
-    }
-    if(strcmp(instruction,"mul") == 0) {
-      printf("Hello7");
-    }
-    if(strcmp(instruction,"sub") == 0) {
-      printf("Hello8");
-    }
-  }
   return flag;
+}
+
+
+int validateInstructions(char *filename) {
+  token = (char*)malloc(sizeof(char) * 100);
+  token1 = (char*)malloc(sizeof(char) * 100);
+  token2 = (char*)malloc(sizeof(char) * 100);
+  FILE *fp = fopen(immediate_output,"r");
+  FILE *op = fopen(filename,"r");
+  address = 1;
+  while(fgets(line, sizeof line, op) != NULL) {
+    token = strtok(line,"\n\t\r ");
+        if(strcmp(token,"section") == 0) {
+            token = strtok(NULL,"\n\t\r ");
+            if(strcmp(token,".text") == 0) {
+              break;
+            }	
+          }
+          address++;
+  }
+  while(fgets(line, sizeof line, op) != NULL) {
+    token = strtok(line,"\n\t\r ");
+        if(strcmp(token,"global") == 0) {
+           address++;	
+        }
+        if(strcmp(token,"extern") == 0) {
+           address++;	
+        }
+  }
+  //printf("%d--->",address);
+  while(fgets(line, sizeof line, fp) != NULL) {
+    token = strtok(line,"\n\t\r ");
+    token1 = strtok(NULL," ");
+    token2 = strtok(NULL,",");
+    if (token1 != NULL) {
+      if (strcmp(token,"add") == 0) {
+       
+      }
+      if (strcmp(token,"mov") == 0) {
+       
+      }
+      if (strcmp(token,"mul") == 0) {
+       
+      }
+      if (strcmp(token,"sub") == 0) {
+       
+      }
+    }
+    address++;
+  }
 }

@@ -706,11 +706,10 @@ void generateTables(char *filename){
       address++;
     }
     fclose(op);
-    op = fopen(immediate_output,"r");
-    rewind(ip);
+    fclose(ip); 
     lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
     printErrorList(filename,error_table_index, sym_table_index);
-    fclose(ip); 
+    validateInstructions(filename);
   } else {
     perror(filename);
     exit(0);
