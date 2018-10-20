@@ -150,9 +150,6 @@ int validateInstructions(char *filename) {
       if (strcmp(token,"jmp") == 0) {
         
       }
-      if (strcmp(token,"call") == 0) {
-       
-      }
       
       if (strcmp(token,"dec") == 0) {
         f = strstr(token1,"Littab");

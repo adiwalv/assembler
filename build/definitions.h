@@ -63,7 +63,7 @@ int16_t i;
 FILE *ip, *op;
 int16_t a, b;
 
-char valid_instructions[8][10] = {"add","call","dec","inc","jmp","mov","mul","sub"};
+char valid_instructions[8][10] = {"add","dec","inc","jmp","mov","mul","sub"};
 int instruction_set_size = sizeof(valid_instructions)/10;
 
 #endif  //  BUILD_DEFINITIONS_H_

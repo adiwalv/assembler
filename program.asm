@@ -38,5 +38,6 @@ ajx:	mov ts,20000
 ppp:	jmp 293445667885
 	call aaaaaaaa
 	jmp asd
-	inc 10 
+	inc 10
+	dec 123
 	jmp qwr
