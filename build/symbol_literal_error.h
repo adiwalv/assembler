@@ -1,38 +1,5 @@
 #include "validation.h"
 
-void insertIntoSystab(int sym_table_index, char *name, int size, \
-                      int no_of_items, char defined, char type, \
-                      char *value, int address, \
-                      int literal_table_link) {
-  symtable[sym_table_index].sym_table_index = sym_table_index;
-  strcpy(symtable[sym_table_index].name, name);
-  symtable[sym_table_index].size = size;
-  symtable[sym_table_index].no_of_items = no_of_items;
-  symtable[sym_table_index].defined = defined ;
-  symtable[sym_table_index].type = type;
-  strcpy(symtable[sym_table_index].value, value);
-  symtable[sym_table_index].address = address;
-  symtable[sym_table_index].literal_table_link = literal_table_link;
-}
-
-void insertIntoLiteral(int *lit_table_index, char *value, \
-                       char *original_value, int sym_table_index) {
-  littab[*lit_table_index].lit_table_index = *lit_table_index;
-  strcpy(littab[*lit_table_index].value, value);
-  strcpy(littab[*lit_table_index].original_value, original_value);
-  littab[*lit_table_index].sym_table_index = sym_table_index;
-  (*lit_table_index)++;
-}
-
-void insertIntoError(int address, int errorType, int symTab_index, int *error_table_index) {
-  errors[*error_table_index].address = address;
-  errors[*error_table_index].errorType = errorType;
-  errors[*error_table_index].symTab_index = symTab_index;
-  (*error_table_index)++;
-}
-
-
-
 char* convertStringToHex(char* str) {
   unsigned long i;
   char *strH = (char*)malloc(sizeof(char)*100);
@@ -706,10 +673,9 @@ void generateTables(char *filename){
       address++;
     }
     fclose(op);
-    fclose(ip); 
     lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
-    printErrorList(filename,error_table_index, sym_table_index);
     validateInstructions(filename);
+    printErrorList(filename,error_table_index, sym_table_index);
   } else {
     perror(filename);
     exit(0);

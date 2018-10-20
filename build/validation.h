@@ -1,5 +1,37 @@
 #include "print.h"
 
+void insertIntoSystab(int sym_table_index, char *name, int size, \
+                      int no_of_items, char defined, char type, \
+                      char *value, int address, \
+                      int literal_table_link) {
+  symtable[sym_table_index].sym_table_index = sym_table_index;
+  strcpy(symtable[sym_table_index].name, name);
+  symtable[sym_table_index].size = size;
+  symtable[sym_table_index].no_of_items = no_of_items;
+  symtable[sym_table_index].defined = defined ;
+  symtable[sym_table_index].type = type;
+  strcpy(symtable[sym_table_index].value, value);
+  symtable[sym_table_index].address = address;
+  symtable[sym_table_index].literal_table_link = literal_table_link;
+}
+
+void insertIntoLiteral(int *lit_table_index, char *value, \
+                       char *original_value, int sym_table_index) {
+  littab[*lit_table_index].lit_table_index = *lit_table_index;
+  strcpy(littab[*lit_table_index].value, value);
+  strcpy(littab[*lit_table_index].original_value, original_value);
+  littab[*lit_table_index].sym_table_index = sym_table_index;
+  (*lit_table_index)++;
+}
+
+void insertIntoError(int address, int errorType, int symTab_index, int *error_table_index) {
+  errors[*error_table_index].address = address;
+  errors[*error_table_index].errorType = errorType;
+  errors[*error_table_index].symTab_index = symTab_index;
+  (*error_table_index)++;
+}
+
+
 char * strlwr(char * s) {
   char *t = s;
   if (!s)
@@ -72,6 +104,7 @@ int validateInstructions(char *filename) {
   token2 = (char*)malloc(sizeof(char) * 100);
   FILE *fp = fopen(immediate_output,"r");
   FILE *op = fopen(filename,"r");
+  char *f;
   address = 1;
   while(fgets(line, sizeof line, op) != NULL) {
     token = strtok(line,"\n\t\r ");
@@ -104,11 +137,34 @@ int validateInstructions(char *filename) {
       if (strcmp(token,"mov") == 0) {
        
       }
+      
       if (strcmp(token,"mul") == 0) {
        
       }
+      
       if (strcmp(token,"sub") == 0) {
        
+      }
+    }
+    if (token2 == NULL) {
+      if (strcmp(token,"jmp") == 0) {
+        
+      }
+      if (strcmp(token,"call") == 0) {
+       
+      }
+      
+      if (strcmp(token,"dec") == 0) {
+        f = strstr(token1,"Littab");
+        if (f) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
+      }
+      if (strcmp(token,"inc") == 0) {
+        f = strstr(token1,"Littab");
+        if (f) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
       }
     }
     address++;
