@@ -3,23 +3,23 @@
 
 void printSymTab(int sym_table_index) {
   int outer;
-  printf(ANSI_COLOR_CYAN "\n\n\tSym Table:" ANSI_COLOR_RESET "\n");
+  printf(ANSI_COLOR_YELLOW "\n\n\tSym Table:" ANSI_COLOR_RESET "\n");
         printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
-        printf("|%-12s|%-12s|%-12s|%-12s|%-12s|%-12s|%-30s|%-10s|%-14s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
+        printf("|%-12s|%-12s|%-12s|%-12s|%-12s|%-12s|%-30s|%-10s|%-13s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
         printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
         for (outer = 1; outer < sym_table_index; outer++) {
-          printf ("|%-12d|%-12s|%-12d|%-12d|%-12c|%-12c|%-30s|%-10d|%-14d|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
+          printf ("|%-12d|%-12s|%-12d|%-12d|%-12c|%-12c|%-30s|%-10d|%-13d|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
                   symtable[outer].no_of_items, symtable[outer].type, symtable[outer].defined,
                   symtable[outer].value, symtable[outer].address, symtable[outer].literal_table_link);
         }
-        printf("=======================================================================================================================================\n");
+        printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
 }
 
 void printSource(char *filename){
   int line_no = 1;
   char line[50];
   FILE *ip = fopen(filename,"r");
-  printf("\n\n\tProgram:\n");
+  printf(ANSI_COLOR_YELLOW"\n\n\tProgram:"ANSI_COLOR_RESET"\n");
   while ( fgets ( line, sizeof line, ip ) != NULL ){
     printf("%12d%20s",line_no, line);
     line_no++;
@@ -28,16 +28,16 @@ void printSource(char *filename){
 
 void printLiteralTab(int lit_table_index){
   
-  printf("\n\n\tLiteral Table:\n");
+  printf(ANSI_COLOR_YELLOW"\n\n\tLiteral Table:"ANSI_COLOR_RESET "\n");
              
-        printf("=====================================================================================================================\n");
+        printf(ANSI_COLOR_CYAN"====================================================================================================================="ANSI_COLOR_RESET "\n");
         printf("|%-12s|%-40s|%-40s|%20s|\n","Table Index","Hex Value","Original Value","Symbol Table Index");
-        printf("=====================================================================================================================\n");
+        printf(ANSI_COLOR_CYAN"====================================================================================================================="ANSI_COLOR_RESET "\n");
         for(outer = 1; outer < lit_table_index; outer++) {
           printf("|%-12d|%-40s|%-40s|%20d|\n",littab[outer].lit_table_index,littab[outer].value,littab[outer].original_value,littab[outer].sym_table_index);
       
           }
-        printf("=====================================================================================================================\n");
+        printf(ANSI_COLOR_CYAN"====================================================================================================================="ANSI_COLOR_RESET "\n");
 }
 /**
 void printImmediateCode(FILE* op){
@@ -57,7 +57,7 @@ void printImmediateCode(FILE* op, char *filename){
   int i = 0;
   char space = ' ';
   FILE *source = fopen(filename, "r");
-  printf("\nIntermediate Code generated for per line in the source:\n\n");
+  printf(ANSI_COLOR_YELLOW"\nIntermediate Code generated for per line in the source:" ANSI_COLOR_RESET "\n\n");
   while (fgets(line, sizeof line, source) != NULL) {
      token = strtok(line, "\n\t\r ");
      if (strcmp(token, "section") == 0) {
@@ -91,7 +91,7 @@ void printImmediateCode(FILE* op, char *filename){
     i++;
   }
 
-  printf("\t Source File \t\t\t\t\t\t Immediate Code\n\n");
+  printf(ANSI_COLOR_BLUE"\t Source File \t\t\t\t\t\t Immediate Code"ANSI_COLOR_RESET"\n\n");
   for (int j = 0; j < i; j++) {
     printf("%d\t %s\t\t\t\t\t\t%s", j+1, source_file[j], immediate[j]);
   }
@@ -115,17 +115,17 @@ int printErrorList(char *filename, int error_table_index, int sym_table_index) {
   if (error_table_index > 1) {
         for (outer = 1; outer < error_table_index; outer++) {
           if (errors[outer].errorType == 0) {
-            printf("\n%s:%d: error: Symbol %s undefined", filename, \
+            printf(ANSI_COLOR_RED"\n%s:%d: error: Symbol %s undefined"ANSI_COLOR_RESET"",filename, \
                    errors[outer].address, \
                    symtable[errors[outer].symTab_index].name);
           }
           if (errors[outer].errorType == 1) {
-            printf("\n%s:%d: error: Symbol %s redefined", filename, \
+            printf(ANSI_COLOR_RED"\n%s:%d: error: Symbol %s redefined"ANSI_COLOR_RESET"", filename, \
                    errors[outer].address, \
                    symtable[errors[outer].symTab_index].name);
           }
           if (errors[outer].errorType == 2) {
-            printf("\n%s:%d: error: Not a valid instruction", filename, \
+            printf(ANSI_COLOR_RED"\n%s:%d: error: Not a valid instruction"ANSI_COLOR_RESET"", filename, \
                    errors[outer].address);
           }
         }
@@ -140,6 +140,6 @@ void printUsage(char *argv) {
 }
 
 void printHelp() {
-     printf("\nOptions:\n-p : To print source program.\n-s : To print symbol table\n-i : To print immediate code\n-t : To print literal table\n-l : To print lst of the source file");
+     printf(ANSI_COLOR_BLUE "\nOptions:\n-p : To print source program.\n-s : To print symbol table\n-i : To print immediate code\n-t : To print literal table\n-l : To print lst of the source file"ANSI_COLOR_RESET "\n");
 }
 

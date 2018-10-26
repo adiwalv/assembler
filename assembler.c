@@ -39,9 +39,11 @@ int main(int argc, char *argv[]) {
         if (t_flag)
           printLiteralTab(lit_table_index);
         if (l_flag) {
-          if (error_table_index > 1) {
+          if (error_table_index < 2) {
             generateLST();
-          } else printf(ANSI_COLOR_RED "\nThere are errors in your code. LST file cannot be generated!" ANSI_COLOR_RESET "\n");
+          } else {
+            printf(ANSI_COLOR_RED "\nThere are errors in your code. LST File cannot be generated!!!" ANSI_COLOR_RESET "\n");
+          }
         }
       }
     }

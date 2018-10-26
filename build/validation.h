@@ -131,6 +131,10 @@ int validateInstructions(char *filename) {
     token = strtok(line,"\n\t\r ");
     token1 = strtok(NULL," ");
     token2 = strtok(NULL,",");
+    if (token2 == NULL && token1 == NULL) {
+       insertIntoError(address, 2, -1, &error_table_index);
+       continue;
+    }
     if (token1 != NULL) {
       if (strcmp(token,"add") == 0) {
         f = strstr(token1,"Symtab");

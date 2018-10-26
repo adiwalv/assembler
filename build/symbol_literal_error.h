@@ -675,7 +675,7 @@ void generateTables(char *filename){
     fclose(op);
     lit_table_index = populateLiteralTable(sym_table_index,lit_table_index);
     validateInstructions(filename);
-    printErrorList(filename,error_table_index, sym_table_index);
+    error_table_index = printErrorList(filename,error_table_index, sym_table_index);
   } else {
     perror(filename);
     exit(0);

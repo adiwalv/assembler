@@ -8,4 +8,4 @@ main:	mov eax,34
 	mov ecx,23
 	add eax,ecx
 	add eax,4412412
-	inc eax
+	inc
