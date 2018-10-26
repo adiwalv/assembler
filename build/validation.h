@@ -3,7 +3,7 @@
 void insertIntoSystab(int sym_table_index, char *name, int size, \
                       int no_of_items, char defined, char type, \
                       char *value, int address, \
-                      int literal_table_link) {
+                      int literal_table_link, char section) {
   symtable[sym_table_index].sym_table_index = sym_table_index;
   strcpy(symtable[sym_table_index].name, name);
   symtable[sym_table_index].size = size;
@@ -13,6 +13,7 @@ void insertIntoSystab(int sym_table_index, char *name, int size, \
   strcpy(symtable[sym_table_index].value, value);
   symtable[sym_table_index].address = address;
   symtable[sym_table_index].literal_table_link = literal_table_link;
+  symtable[sym_table_index].section = section;
 }
 
 void insertIntoLiteral(int *lit_table_index, char *value, \

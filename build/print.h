@@ -5,12 +5,12 @@ void printSymTab(int sym_table_index) {
   int outer;
   printf(ANSI_COLOR_YELLOW "\n\n\tSym Table:" ANSI_COLOR_RESET "\n");
         printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
-        printf("|%-12s|%-12s|%-12s|%-12s|%-12s|%-12s|%-30s|%-10s|%-13s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
+        printf("|%-12s|%-12s|%-12s|%-12s|%-4s|%-7s|%-35s|%-10s|%-13s|%-7s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry","Section");
         printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
         for (outer = 1; outer < sym_table_index; outer++) {
-          printf ("|%-12d|%-12s|%-12d|%-12d|%-12c|%-12c|%-30s|%-10d|%-13d|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
+          printf ("|%-12d|%-12s|%-12d|%-12d|%-4c|%-7c|%-35s|%-10d|%-13d|%-7c|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
                   symtable[outer].no_of_items, symtable[outer].type, symtable[outer].defined,
-                  symtable[outer].value, symtable[outer].address, symtable[outer].literal_table_link);
+                  symtable[outer].value, symtable[outer].address, symtable[outer].literal_table_link,symtable[outer].section);
         }
         printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
 }

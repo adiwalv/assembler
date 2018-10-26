@@ -29,6 +29,7 @@ struct symtab {
   char value[100];
   int address;
   int literal_table_link;
+  char section;
 }symtable[100];
 
 
