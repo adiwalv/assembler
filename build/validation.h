@@ -104,7 +104,7 @@ int validateInstructions(char *filename) {
   token2 = (char*)malloc(sizeof(char) * 100);
   FILE *fp = fopen(immediate_output,"r");
   FILE *op = fopen(filename,"r");
-  char *f;
+  char *f,*g,*h;
   address = 1;
   while(fgets(line, sizeof line, op) != NULL) {
     token = strtok(line,"\n\t\r ");
@@ -126,31 +126,64 @@ int validateInstructions(char *filename) {
         }
   }
   //printf("%d--->",address);
+  address+=1;
   while(fgets(line, sizeof line, fp) != NULL) {
     token = strtok(line,"\n\t\r ");
     token1 = strtok(NULL," ");
     token2 = strtok(NULL,",");
     if (token1 != NULL) {
       if (strcmp(token,"add") == 0) {
-       
+        f = strstr(token1,"Symtab");
+        g = strstr(token2,"Symtab");
+        h = strstr(token1,"Littab");
+        if (f&&g) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
+        if (h) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
       }
       if (strcmp(token,"mov") == 0) {
-       
+       f = strstr(token1,"Symtab");
+       g = strstr(token2,"Symtab");
+       h = strstr(token1,"Littab");
+       if (f&&g) {
+         insertIntoError(address, 2, -1, &error_table_index);
+       }
+       if (h) {
+         insertIntoError(address, 2, -1, &error_table_index);
+       }
       }
-      
       if (strcmp(token,"mul") == 0) {
-       
+        f = strstr(token1,"Symtab");
+        g = strstr(token2,"Symtab");
+        h = strstr(token1,"Littab");
+        if (f&&g) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
+        if (h) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
       }
-      
       if (strcmp(token,"sub") == 0) {
-       
+        f = strstr(token1,"Symtab");
+        g = strstr(token2,"Symtab");
+        h = strstr(token1,"Littab");
+        if (f&&g) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
+        if (h) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
       }
     }
     if (token2 == NULL) {
       if (strcmp(token,"jmp") == 0) {
-        
+         f = strstr(token1,"Littab");
+        if (f) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
       }
-      
       if (strcmp(token,"dec") == 0) {
         f = strstr(token1,"Littab");
         if (f) {

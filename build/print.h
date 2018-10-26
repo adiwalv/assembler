@@ -3,10 +3,10 @@
 
 void printSymTab(int sym_table_index) {
   int outer;
-          printf("\n\n\tSym Table:\n");
-        printf("=======================================================================================================================================\n");
+  printf(ANSI_COLOR_CYAN "\n\n\tSym Table:" ANSI_COLOR_RESET "\n");
+        printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
         printf("|%-12s|%-12s|%-12s|%-12s|%-12s|%-12s|%-30s|%-10s|%-14s|\n","Table Index","Name","Size","No of items","Type","Defined","Value","Address","Littab Entry");
-        printf("=======================================================================================================================================\n");
+        printf(ANSI_COLOR_CYAN "======================================================================================================================================="ANSI_COLOR_RESET"\n");
         for (outer = 1; outer < sym_table_index; outer++) {
           printf ("|%-12d|%-12s|%-12d|%-12d|%-12c|%-12c|%-30s|%-10d|%-14d|\n", symtable[outer].sym_table_index, symtable[outer].name, symtable[outer].size,
                   symtable[outer].no_of_items, symtable[outer].type, symtable[outer].defined,
@@ -130,7 +130,7 @@ int printErrorList(char *filename, int error_table_index, int sym_table_index) {
           }
         }
   } else {
-    printf("\nNo errors reported!");
+    printf(ANSI_COLOR_GREEN "\nNo errors reported!" ANSI_COLOR_RESET "\n");
   }
   return error_table_index;
 }

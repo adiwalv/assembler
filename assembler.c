@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
         if (l_flag) {
           if (error_table_index > 1) {
             generateLST();
-          }
+          } else printf(ANSI_COLOR_RED "\nThere are errors in your code. LST file cannot be generated!" ANSI_COLOR_RESET "\n");
         }
       }
     }

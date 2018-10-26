@@ -365,7 +365,7 @@ void generateTables(char *filename){
           symtable[check].address = address + 1;
         }
       }
-     if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"call") == 0)){
+      if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"call") == 0)){
         token = strtok(NULL,"\n\t\r ");
         check = checkEntry(token,sym_table_index);
         if(check < 0) {
@@ -426,7 +426,7 @@ void generateTables(char *filename){
             fprintf(op,"%s Reg#%d\n", token, check);
           }
         }
-        else {
+       else {
           op1 = registerTable(token2);
           op2 = registerTable(token3);
           if(op1 < 0 && op2 >= 0) {
