@@ -283,7 +283,7 @@ void generateTables(char *filename){
             hex = makeLittleEndian(hex);
             strcpy(lit_value,hex);
             strcpy(value,token);
-            insertIntoSystab(sym_table_index, name, 1 * atoi(token), atoi(token), 'd', 's', value, \
+            insertIntoSystab(sym_table_index, name, 4 * atoi(token), atoi(token), 'd', 's', value, \
                              symtable[sym_table_index-1].address + symtable[sym_table_index-1].size,lit_table_index);
             insertIntoLiteral(&lit_table_index, lit_value, value,  sym_table_index);
          }

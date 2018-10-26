@@ -1,5 +1,5 @@
 // Author : Vikas Adiwal
-#include "build/generate_lst.h"
+#include "build/generate_object.h"
 
 int main(int argc, char *argv[]) {
   int p_flag, s_flag, i_flag, t_flag, l_flag, h_flag;
@@ -30,6 +30,9 @@ int main(int argc, char *argv[]) {
         printHelp();
       } else {
           generateTables(argv[optind]);
+          if (error_table_index < 2) {
+            generateObjectFile(argv[optind]);
+          }
         if (p_flag)
           printSource(argv[optind]);
         if (s_flag)
