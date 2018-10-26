@@ -205,3 +205,19 @@ int validateInstructions(char *filename) {
     address++;
   }
 }
+
+char* file_ext(const char *string)
+{
+    assert(string != NULL);
+    char *ext = strrchr(string, '.');
+ 
+    if (ext == NULL)
+        return (char*) string + strlen(string);
+ 
+    for (char *iter = ext + 1; *iter != '\0'; iter++) {
+        if (!isalnum((unsigned char)*iter))
+            return (char*) string + strlen(string);
+    }
+ 
+    return ext;
+}

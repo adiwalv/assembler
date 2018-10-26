@@ -17,9 +17,30 @@ char *getDotFilename(char* mystr) {
 
 void generateObjectFile(char *filename){
   FILE *op = fopen(getDotFilename(filename),"w");
-  for(int i = 0; i < sym_table_index; i++) {
-    
+  char *hex = (char*)malloc(sizeof(char)*8);
+  char *value = (char*)malloc(sizeof(char)*8);
+  char *divide = (char*)malloc(sizeof(char)*100);
+  memset(hex,0,8);
+  memset(value,0,8);
+  
+  int i;
+  int c;
+  int diff;
+  for(i = 1; symtable[i].section != 'B'; i++) {
+    c = 0;
+    sprintf(hex,"%08X",(unsigned int)symtable[i].address); 
+    fprintf(op,"%s  %s\n",hex, littab[symtable[i].literal_table_link].value);
   }
+
+  fprintf(op,"\n");
+  for(; symtable[i].section != 'T'; i++) {
+    sprintf(hex,"%08X",(unsigned int)symtable[i].address);
+    sprintf(value,"%08X",(unsigned int)symtable[i].size);
+    fprintf(op,"%s  <res %s>\n", hex, value);
+  }
+  
+  fprintf(op,"\n");
+  
   fclose(op);
 }
 

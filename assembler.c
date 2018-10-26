@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
   int p_flag, s_flag, i_flag, t_flag, l_flag, h_flag;
   p_flag = s_flag = i_flag = t_flag = l_flag = h_flag = 0;
-    while ((ch = getopt(argc, argv, "splith")) != -1) {
+  while ((ch = getopt(argc, argv, "splith")) != -1) {
         if (ch == 's')
             s_flag = 1;
         else if (ch == 'p')
@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
         else
           continue;
     }
+  const char *ext = file_ext(argv[optind]);
+  if(strcmp(ext,".asm") != 0) {
+    printf("Please provide a valid asm file. Exiting...\n");
+    exit(0);
+  }
     if (optind != argc - 1) {
       printUsage(argv[0]);
        if (h_flag)
