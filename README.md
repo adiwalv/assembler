@@ -34,7 +34,7 @@ assembler file_name [-options] [-h for help]
 cat file_name.lst
 ```
 
-###OP Code Table
+# OP Code Table
 
 | Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
