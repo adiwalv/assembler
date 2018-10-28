@@ -8,6 +8,15 @@
 #include<string.h>
 #include<stdlib.h>
 #include<ctype.h>
+#include <assert.h>
+
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
 
 struct symtab {
@@ -20,6 +29,7 @@ struct symtab {
   char value[100];
   int address;
   int literal_table_link;
+  char section;
 }symtable[100];
 
 
@@ -37,6 +47,7 @@ struct errorTable {
 }errors[100];
 
 
+
 char* convertStringToHex(char* str);
 char* extract_quoted_string(char *substring, char *token1);
 int checkEntry(char *s, int sym_table_index);
@@ -47,7 +58,7 @@ void printSource(char *filename);
 void printSymTab(int sym_table_index);
 void printLiteralTab(int lit_table_index);
 void printImmediateCode(FILE* op, char *filename);
-void printErrorList(char* filename, int error_table_index, int sym_table_index);
+int printErrorList(char* filename, int error_table_index, int sym_table_index);
 char* makeLittleEndian(char *str);
 
 char line[150];
@@ -63,6 +74,21 @@ int16_t i;
 FILE *ip, *op;
 int16_t a, b;
 
-char valid_instructions[][10] = {"mov", "add", "sub", "mul", "jmp", "dec", "inc", "call"};
+char valid_instructions[8][10] = {"extern","add","dec","inc","jmp","mov","mul","sub"};
+int instruction_set_size = sizeof(valid_instructions)/10;
+
+const char *modrm[8][8] = {
+  {"C0","C8","D0","D8","E0","E8","F0","F8"},
+  {"C1","C9","D1","D9","EQ","E9","F1","F9"},
+  {"C2","CA","D2","DA","E2","EA","F2","FA"},
+  {"C3","CB","D3","DB","E3","EB","F3","FB"},
+  {"C4","CC","D4","DC","E4","EC","F4","FC"},
+  {"C4","CD","D5","DD","E5","ED","F5","FD"},
+  {"C6","CE","D6","DE","E6","EE","F6","FE"},
+  {"C7","CF","D7","DF","E7","EF","F7","FF"}
+  };
+
+
+
 
 #endif  //  BUILD_DEFINITIONS_H_

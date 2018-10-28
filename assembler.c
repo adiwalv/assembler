@@ -1,10 +1,10 @@
 // Author : Vikas Adiwal
+#include "build/generate_object.h"
 
-#include "build/generate_lst.h"
 int main(int argc, char *argv[]) {
   int p_flag, s_flag, i_flag, t_flag, l_flag, h_flag;
   p_flag = s_flag = i_flag = t_flag = l_flag = h_flag = 0;
-    while ((ch = getopt(argc, argv, "splith")) != -1) {
+  while ((ch = getopt(argc, argv, "splith")) != -1) {
         if (ch == 's')
             s_flag = 1;
         else if (ch == 'p')
@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
         else
           continue;
     }
+  const char *ext = file_ext(argv[optind]);
+  if(strcmp(ext,".asm") != 0) {
+    printf("Please provide a valid asm file. Exiting...\n");
+    exit(0);
+  }
     if (optind != argc - 1) {
       printUsage(argv[0]);
        if (h_flag)
@@ -30,6 +35,9 @@ int main(int argc, char *argv[]) {
         printHelp();
       } else {
           generateTables(argv[optind]);
+          if (error_table_index < 2) {
+            generateObjectFile(argv[optind]);
+          }
         if (p_flag)
           printSource(argv[optind]);
         if (s_flag)
@@ -38,6 +46,13 @@ int main(int argc, char *argv[]) {
           printImmediateCode(op, argv[optind]);
         if (t_flag)
           printLiteralTab(lit_table_index);
+        if (l_flag) {
+          if (error_table_index < 2) {
+            generateLST(argv[optind]);
+          } else {
+            printf(ANSI_COLOR_RED "\nThere are errors in your code. LST File cannot be generated!!!" ANSI_COLOR_RESET "\n");
+          }
         }
+      }
     }
 }
