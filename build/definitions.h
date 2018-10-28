@@ -77,4 +77,18 @@ int16_t a, b;
 char valid_instructions[8][10] = {"extern","add","dec","inc","jmp","mov","mul","sub"};
 int instruction_set_size = sizeof(valid_instructions)/10;
 
+const char *modrm[8][8] = {
+  {"C0","C8","D0","D8","E0","E8","F0","F8"},
+  {"C1","C9","D1","D9","EQ","E9","F1","F9"},
+  {"C2","CA","D2","DA","E2","EA","F2","FA"},
+  {"C3","CB","D3","DB","E3","EB","F3","FB"},
+  {"C4","CC","D4","DC","E4","EC","F4","FC"},
+  {"C4","CD","D5","DD","E5","ED","F5","FD"},
+  {"C6","CE","D6","DE","E6","EE","F6","FE"},
+  {"C7","CF","D7","DF","E7","EF","F7","FF"}
+  };
+
+
+
+
 #endif  //  BUILD_DEFINITIONS_H_
