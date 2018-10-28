@@ -36,13 +36,13 @@ int registerTable(char *s){
     return 2;
   if(strcmp(s,"ebx") == 0)
     return 3;
-  if(strcmp(s,"esi") == 0)
-    return 4;
-  if(strcmp(s,"edi") == 0)
-    return 5;
   if(strcmp(s,"esp") == 0)
-    return 6;
+    return 4;
   if(strcmp(s,"ebp") == 0)
+    return 5;
+  if(strcmp(s,"esi") == 0)
+    return 6;
+  if(strcmp(s,"edi") == 0)
     return 7;
   return -1;
 }
