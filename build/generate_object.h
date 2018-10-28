@@ -114,13 +114,117 @@ void generateObjectFile(char *filename){
       }
     }
     if(strcmp(token,"add") == 0){
-      
-    }
-    if(strcmp(token,"mov") == 0){
-      
+      token1 = strtok(NULL,"\n\t\r ,");
+      token2 = strtok(NULL,"\n\t\r ,");
+      extractNumber(&token1,&token2,&ret1,&ret2,&type1,&type2);
+      if (strcmp(type1,"Regist") == 0 && strcmp(type2,"SymTab") == 0) {
+        if (ret1 == 0) {
+          strcpy(instruct,"05");
+          sprintf(hex,"%08X",address);
+          sprintf(value,"[%08X]",symtable[ret2].address);
+          strcat(instruct,value);
+          fprintf(op,"%s %s\n",hex,instruct);
+          address+=5;
+        } else {
+           strcpy(instruct,"81");
+           strcat(instruct,modrm[ret1][0]);
+           sprintf(hex,"%08X",address);
+           sprintf(value,"[%08X]",symtable[ret2].address);
+           strcat(instruct,value);
+           fprintf(op,"%s %s\n",hex,instruct);
+           address+=5;
+        }
+      }
+      if (strcmp(type1,"Regist") == 0 && strcmp(type2,"Regist") == 0) {
+        sprintf(mod,"%s",modrm[ret1][ret2]);
+        sprintf(hex,"%08X",address);
+        strcpy(instruct,"01");
+        strcat(instruct,mod);
+        fprintf(op,"%s %s\n",hex,instruct);
+        //printf("\\helloasdasd");
+        address+=2;
+      }
+       if (strcmp(type1,"Regist") == 0 && strcmp(type2,"Littab") == 0) {
+         if(ret1 == 0) {
+           strcpy(instruct,"05");
+           strcat(instruct,littab[ret2].value);
+           sprintf(hex,"%08X",address);
+           fprintf(op,"%s %s\n",hex,instruct);
+           address+=5;
+         } else {
+           strcpy(instruct,"81");
+           strcat(instruct,modrm[ret1][0]);
+           strcat(instruct,littab[ret2].value);
+           sprintf(hex,"%08X",address);
+           fprintf(op,"%s %s\n",hex,instruct);
+           address+=5;
+         }
+       }
     }
     if(strcmp(token,"sub") == 0){
-      
+      token1 = strtok(NULL,"\n\t\r ,");
+      token2 = strtok(NULL,"\n\t\r ,");
+      extractNumber(&token1,&token2,&ret1,&ret2,&type1,&type2); 
+      if (strcmp(type1,"Regist") == 0 && strcmp(type2,"Regist") == 0) {
+        sprintf(mod,"%s",modrm[ret1][ret2]);
+        sprintf(hex,"%08X",address);
+        strcpy(instruct,"29");
+        strcat(instruct,mod);
+        fprintf(op,"%s %s\n",hex,instruct);
+        address+=2;
+      }
+      if (strcmp(type1,"Regist") == 0 && strcmp(type2,"Littab") == 0) {
+        if(ret1 == 0) {
+          strcpy(instruct,"2D");
+          strcat(instruct,littab[ret2].value);
+          sprintf(hex,"%08X",address);
+          fprintf(op,"%s %s\n",hex,instruct);
+          address+=5;
+        } else {
+          strcpy(instruct,"83");
+          strcat(instruct,modrm[ret1][0]);
+          strcat(instruct,littab[ret2].value);
+          sprintf(hex,"%08X",address);
+          fprintf(op,"%s %s\n",hex,instruct);
+          address+=5;
+        }
+      }
+       if (strcmp(type1,"Regist") == 0 && strcmp(type2,"SymTab") == 0) {
+          if (ret1 == 0) {
+          strcpy(instruct,"2D");
+          sprintf(hex,"%08X",address);
+          sprintf(value,"[%08X]",symtable[ret2].address);
+          strcat(instruct,value);
+          fprintf(op,"%s %s\n",hex,instruct);
+          address+=5;
+        } else {
+           strcpy(instruct,"83");
+           strcat(instruct,modrm[ret1][0]);
+           sprintf(hex,"%08X",address);
+           sprintf(value,"[%08X]",symtable[ret2].address);
+           strcat(instruct,value);
+           fprintf(op,"%s %s\n",hex,instruct);
+           address+=5;
+        }
+       }
+    }
+    if(strcmp(token,"mul") == 0){
+      token1 = strtok(NULL,"\n\t\r ,");
+      strcpy(instruct,"F7");
+      if(strcmp(token1,"Regist0") == 0) {
+        strcat(instruct,"E0");
+      }
+      if(strcmp(token1,"Regist1") == 0) {
+        strcat(instruct,"E1");
+      }
+      if(strcmp(token1,"Regist2") == 0) {
+        strcat(instruct,"E2");
+      }
+      if(strcmp(token1,"Regist3") == 0) {
+        strcat(instruct,"E3");
+      }
+       sprintf(hex,"%08X",address);
+       fprintf(op,"%s %s\n",hex,instruct);
     }
   }
   fclose(op);
@@ -143,5 +247,5 @@ void generateLST(char *filename) {
   if(!status) {
     printf(ANSI_COLOR_GREEN "LST created!!!" ANSI_COLOR_RESET "\n");
   }
-  status = remove(dot_filename);
+  //status = remove(dot_filename);
 }

@@ -365,14 +365,17 @@ void generateTables(char *filename){
           symtable[check].address = address + 1;
         }
       }
-      if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"call") == 0)){
+      if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"mul") == 0)){
         token = strtok(NULL,"\n\t\r ");
-        check = checkEntry(token,sym_table_index);
-        if(check < 0) {
+        check = registerTable(token);
+        if(check<0) {
+          check = checkEntry(token,sym_table_index);
+          if (check < 0) {
           insertIntoSystab(sym_table_index, token,  -1, -1, 'u', 'l', "***", \
                              address + 1, -1,'T'); 
           sym_table_index++;
-        } 
+          } 
+        }
       }
     }
     rewind(ip);

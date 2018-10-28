@@ -198,17 +198,6 @@ int validateInstructions(char *filename) {
          insertIntoError(address, 2, -1, &error_table_index);
        }
       }
-      if (strcmp(token,"mul") == 0) {
-        f = strstr(token1,"Symtab");
-        g = strstr(token2,"Symtab");
-        h = strstr(token1,"Littab");
-        if (f&&g) {
-          insertIntoError(address, 2, -1, &error_table_index);
-        }
-        if (h) {
-          insertIntoError(address, 2, -1, &error_table_index);
-        }
-      }
       if (strcmp(token,"sub") == 0) {
         f = strstr(token1,"Symtab");
         g = strstr(token2,"Symtab");
@@ -237,6 +226,13 @@ int validateInstructions(char *filename) {
       if (strcmp(token,"inc") == 0) {
         f = strstr(token1,"Littab");
         if (f) {
+          insertIntoError(address, 2, -1, &error_table_index);
+        }
+      }
+      if (strcmp(token,"mul") == 0) {
+        f = strstr(token1,"Littab");
+        g = strstr(token1,"SymTab");
+        if (f||g) {
           insertIntoError(address, 2, -1, &error_table_index);
         }
       }
