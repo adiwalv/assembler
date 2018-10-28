@@ -29,7 +29,7 @@ make install
 ```bash
 assembler file_name [-options] [-h for help]
 ```
-### To view the lst file, file_name is create when you pass -l
+### To view the lst file, file_name.lst is created when you pass -l
 ```bash
 cat file_name.lst
 ```
