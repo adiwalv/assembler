@@ -34,12 +34,18 @@ assembler file_name [-options] [-h for help]
 cat file_name.lst
 ```
 
+---
+
 # OP Code Table
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+modrm can be looked up from table below
 
+| Operation        | Opcode           |
+| ------------- |:-------------:|
+| mov reg, reg     | 89 modrm | 
+| col 2 is      | centered      |
+| zebra stripes | are neat      |
+
+
+# Modrm Table
 
