@@ -1,5 +1,44 @@
 #include "print.h"
 
+char* substr(const char *src, int m, int n)
+{
+	// get length of the destination string
+	int len = n - m;
+
+	// allocate (len + 1) chars for destination (+1 for extra null character)
+	char *dest = (char*)malloc(sizeof(char) * (len + 1));
+
+	// extracts characters between m'th and n'th index from source string
+	// and copy them into the destination string
+	for (int i = m; i < n && (*src != '\0'); i++)
+	{
+		*dest = *(src + i);
+		dest++;
+	}
+
+	// null-terminate the destination string
+	*dest = '\0';
+
+	// return the destination string
+	return dest - len;
+}
+
+void extractNumber(char **token1,char **token2, long *ret1, long *ret2, char **type1, char **type2) {
+  char *s = *token1; 
+  while (*s && !isdigit(*s)) s++; 
+  if (*s) {
+    sscanf(s, "%d", ret1); 
+  }
+  s = *token2; 
+  while (*s && !isdigit(*s)) s++; 
+  if (*s) {
+    sscanf(s, "%d", ret2); 
+  }
+  *type1 = substr(*token1,0,6);
+  *type2 = substr(*token2,0,6);
+
+}
+
 void insertIntoSystab(int sym_table_index, char *name, int size, \
                       int no_of_items, char defined, char type, \
                       char *value, int address, \

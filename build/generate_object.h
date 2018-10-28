@@ -17,15 +17,18 @@ char *getDotFilename(char* mystr) {
 
 void generateObjectFile(char *filename){
   FILE *op = fopen(getDotFilename(filename),"w");
+  FILE *ip = fopen(immediate_output,"r");
   char *hex = (char*)malloc(sizeof(char)*8);
   char *value = (char*)malloc(sizeof(char)*8);
-  char *divide = (char*)malloc(sizeof(char)*100);
+  
   memset(hex,0,8);
   memset(value,0,8);
+  char *type1,*type2;
   
   int i;
   int c;
-  int diff;
+  long ret1,ret2;
+  char *s;
   for(i = 1; symtable[i].section != 'B'; i++) {
     c = 0;
     sprintf(hex,"%08X",(unsigned int)symtable[i].address); 
@@ -40,10 +43,30 @@ void generateObjectFile(char *filename){
   }
   
   fprintf(op,"\n");
-  
+
+  while(fgets(line, sizeof line, ip) != NULL) {
+
+    token = strtok(line,"\n\t\r ");
+    if(strcmp(token,"mov") == 0){
+      token1 = strtok(NULL,"\n\t\r ,");
+      token2 = strtok(NULL,"\n\t\r ,");
+      extractNumber(&token1,&token2,&ret1,&ret2,&type1,&type2);
+      
+    }
+    if(strcmp(token,"add") == 0){
+      
+    }
+    if(strcmp(token,"mov") == 0){
+      
+    }
+    if(strcmp(token,"sub") == 0){
+      
+    }
+  }
   fclose(op);
+  fclose(ip);
 }
 
 void generateLST(char *path) {
-  //printf("\nFilen mae---->%s",getFilename(path));
+
 }
