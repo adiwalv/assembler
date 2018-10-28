@@ -29,8 +29,24 @@ make install
 ```bash
 assembler file_name [-options] [-h for help]
 ```
-### To view the lst file, file_name is create when you pass -l
+### To view the lst file, file_name.lst is created when you pass -l
 ```bash
 cat file_name.lst
 ```
 
+---
+
+# OP Code Table
+
+modrm can be looked up from table below
+
+| Operation        | Opcode           |
+| ------------- |:-------------:|
+| mov reg, reg     | 89 modrm | 
+| col 2 is      | centered      |
+| zebra stripes | are neat      |
+
+
+# Modrm Table
+
+![alt text](src/images/mod.png "Mod RM")

@@ -36,13 +36,13 @@ int registerTable(char *s){
     return 2;
   if(strcmp(s,"ebx") == 0)
     return 3;
-  if(strcmp(s,"esi") == 0)
-    return 4;
-  if(strcmp(s,"edi") == 0)
-    return 5;
   if(strcmp(s,"esp") == 0)
-    return 6;
+    return 4;
   if(strcmp(s,"ebp") == 0)
+    return 5;
+  if(strcmp(s,"esi") == 0)
+    return 6;
+  if(strcmp(s,"edi") == 0)
     return 7;
   return -1;
 }
@@ -365,14 +365,17 @@ void generateTables(char *filename){
           symtable[check].address = address + 1;
         }
       }
-      if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"call") == 0)){
+      if((strcmp(token,"jmp") == 0)||(strcmp(token,"jnz") == 0) || (strcmp(token,"jz") == 0) || (strcmp(token,"mul") == 0)){
         token = strtok(NULL,"\n\t\r ");
-        check = checkEntry(token,sym_table_index);
-        if(check < 0) {
+        check = registerTable(token);
+        if(check<0) {
+          check = checkEntry(token,sym_table_index);
+          if (check < 0) {
           insertIntoSystab(sym_table_index, token,  -1, -1, 'u', 'l', "***", \
                              address + 1, -1,'T'); 
           sym_table_index++;
-        } 
+          } 
+        }
       }
     }
     rewind(ip);
