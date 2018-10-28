@@ -49,3 +49,4 @@ modrm can be looked up from table below
 
 # Modrm Table
 
+![alt text](https://gitlab.com/vikasadiwal/assembler/blob/develop/src/images/mod.png "Mod RM")
