@@ -107,8 +107,8 @@ void generateObjectFile(char *filename){
       if (strcmp(type1,"Regist") == 0 && strcmp(type2,"SymTab") == 0) {
         getReg(ret1,&instruct);
         sprintf(hex,"%08X",address);
-         sprintf(value,"[%08X]",symtable[ret2].address);
-         strcat(instruct,value);
+        sprintf(value,"[%08X]",symtable[ret2].address);
+        strcat(instruct,value);
         fprintf(op,"%s %s\n",hex,instruct);
         address+=5;
       }

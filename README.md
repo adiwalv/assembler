@@ -40,10 +40,20 @@ cat file_name.lst
 
 modrm can be looked up from table below
 
+addresses are in little endian format
+
 | Operation        | Opcode           |
 | ------------- |:-------------:|
 | mov reg, reg     | 89 modrm | 
-| col 2 is      | centered      |
+| mov eax, lit      | B8 address      |
+| mov ecx, lit      | B9 address      |
+| mov edx, lit      | BA address      |
+| mov ebx, lit      | BB address      |
+| mov esp, lit      | BC address      |
+| mov ebp, lit      | BD address      |
+| mov esi, lit      | BE address      |
+| mov edi, lit      | BF address      |
+
 | zebra stripes | are neat      |
 
 
