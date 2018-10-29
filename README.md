@@ -66,7 +66,19 @@ value of immediate are in little endian format
 | add reg, symbol     | 81modrm_with_eax [address of immediate]      |
 | add reg, reg      | 01 modrm      |
 | add reg, immediate     | 81modrm_with_eax [address of immediate]      |
-
+| sub eax, immediate     | 2D value of immediate      |
+| sub eax, symbol     | 2D [address of symbol]      |
+| sub reg, symbol     | 83 modrm_with_eax [address of immediate]      |
+| sub reg, reg      | 29 modrm      |
+| sub reg, immediate     | 83modrm_with_eax [address of immediate]      |
+| mul reg0     | F7E0 |
+| mul reg1     | F7E1 |
+| mul reg2     | F7E2 |
+| mul reg3     | F7E3 |
+| mul reg4     | F7E4 |
+| mul reg5     | F7E5 |
+| mul reg6     | F7E6 |
+| mul reg7     | F7E7 |
 
 
 # Modrm Table
