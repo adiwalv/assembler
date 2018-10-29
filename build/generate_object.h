@@ -223,6 +223,18 @@ void generateObjectFile(char *filename){
       if(strcmp(token1,"Regist3") == 0) {
         strcat(instruct,"E3");
       }
+      if(strcmp(token1,"Regist4") == 0) {
+        strcat(instruct,"E4");
+      }
+      if(strcmp(token1,"Regist5") == 0) {
+        strcat(instruct,"E5");
+      }
+      if(strcmp(token1,"Regist6") == 0) {
+        strcat(instruct,"E6");
+      }
+      if(strcmp(token1,"Regist7") == 0) {
+        strcat(instruct,"E7");
+      }
        sprintf(hex,"%08X",address);
        fprintf(op,"%s %s\n",hex,instruct);
     }

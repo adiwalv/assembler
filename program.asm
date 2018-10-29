@@ -44,3 +44,7 @@ main:	mov eax,34
 	mul edx
 	mul ebx
 	mul eax
+	mul esp
+	mul ebp
+	mul esi
+	mul edi
