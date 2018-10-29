@@ -53,6 +53,20 @@ value of immediate are in little endian format
 | mov ebp, immediate      | BD value of immediate      |
 | mov esi, immediate      | BE value of immediate      |
 | mov edi, immediate      | BF value of immediate      |
+| mov eax, symbol      	  | B8[address of symbol]      |
+| mov ecx, symbol	  | B9[address of symbol]      |
+| mov edx, symbol         | BA[address of symbol]      |
+| mov ebx, symbol         | BB[address of symbol]      |
+| mov esp, symbol         | BC[address of symbol]      |
+| mov ebp, symbol      	  | BD[address of symbol]      |
+| mov esi, symbol         | BE[address of symbol]      |
+| mov edi, symbol         | BF[address of symbol]      |
+| add eax, immediate     | 05 value of immediate      |
+| add eax, symbol     | 05 [address of symbol]      |
+| add reg, symbol     | 81modrm_with_eax [address of immediate]      |
+| add reg, reg      | 01 modrm      |
+| add reg, immediate     | 81modrm_with_eax [address of immediate]      |
+
 
 
 # Modrm Table
