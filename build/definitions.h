@@ -88,7 +88,4 @@ const char *modrm[8][8] = {
   {"C7","CF","D7","DF","E7","EF","F7","FF"}
   };
 
-
-
-
 #endif  //  BUILD_DEFINITIONS_H_

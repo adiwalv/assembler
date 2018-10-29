@@ -13,6 +13,10 @@ main:	mov eax,34
 	mov ecx,43
 	mov edx,43
 	mov ebx,43
+	mov esp,43
+	mov ebx,43
+	mov esi,43
+	mov edi,43
 	mov ecx,eax
 	mov ecx,ecx
 	mov ecx,message

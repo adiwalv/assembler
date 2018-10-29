@@ -40,11 +40,33 @@ cat file_name.lst
 
 modrm can be looked up from table below
 
+value of immediate are in little endian format
+
 | Operation        | Opcode           |
 | ------------- |:-------------:|
 | mov reg, reg     | 89 modrm | 
-| col 2 is      | centered      |
-| zebra stripes | are neat      |
+| mov eax, immediate      | B8 value of immediate      |
+| mov ecx, immediate      | B9 value of immediate      |
+| mov edx, immediate      | BA value of immediate      |
+| mov ebx, immediate      | BB value of immediate      |
+| mov esp, immediate      | BC value of immediate      |
+| mov ebp, immediate      | BD value of immediate      |
+| mov esi, immediate      | BE value of immediate      |
+| mov edi, immediate      | BF value of immediate      |
+| mov eax, symbol      	  | B8[address of symbol]      |
+| mov ecx, symbol	  | B9[address of symbol]      |
+| mov edx, symbol         | BA[address of symbol]      |
+| mov ebx, symbol         | BB[address of symbol]      |
+| mov esp, symbol         | BC[address of symbol]      |
+| mov ebp, symbol      	  | BD[address of symbol]      |
+| mov esi, symbol         | BE[address of symbol]      |
+| mov edi, symbol         | BF[address of symbol]      |
+| add eax, immediate     | 05 value of immediate      |
+| add eax, symbol     | 05 [address of symbol]      |
+| add reg, symbol     | 81modrm_with_eax [address of immediate]      |
+| add reg, reg      | 01 modrm      |
+| add reg, immediate     | 81modrm_with_eax [address of immediate]      |
+
 
 
 # Modrm Table

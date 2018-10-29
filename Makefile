@@ -2,7 +2,7 @@ all:
 	gcc -g -o assembler assembler.c
 
 clean:
-	rm assembler immediate.i *.o 
+	rm assembler immediate.i *.o *.lst 
 
 install:
 	sudo cp assembler /usr/bin/
