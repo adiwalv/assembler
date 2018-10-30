@@ -1,8 +1,20 @@
 // Author : Vikas Adiwal
 #include "build/generate_object.h"
+
+int valueAt(char *add[],int count,char *value) {
+  for(int i = 0 ; i < count ; i++) {
+    if(strcmp(add[i],value) == 0){
+      return i;
+    }
+  }
+  return -1;
+}
+
 int main(int argc, char *argv[]) {
   char *add[100];
-  char *inst[100];
+  char *inst[100];  
+  token1 = (char*)malloc(sizeof(char)*100);
+  token2 = (char*)malloc(sizeof(char)*100);
   for(i=0;i<100;i++) {
     add[i]=malloc(sizeof(char)*100);
     inst[i]=malloc(sizeof(char)*100);
@@ -16,20 +28,18 @@ int main(int argc, char *argv[]) {
   }
   FILE *ip = fopen(argv[1],"r");
   if(ip != NULL) {
-    while(fgets(line, sizeof line, ip)!=NULL) {
-      
-    }
-      else
-      {
-        continue; //skip blank lines
-      }
-    }
+
     while(fgets(line, sizeof line, ip)!=NULL) {
       int num_matches = sscanf(line, "%s %s", token1, token2);
       if( num_matches == 2 ){
-        printf("%s %s",token1,token2);
-      }
+        strcpy(add[count],token1);
+        strcpy(inst[count],token2);
+        count++;
+      } else
+        continue;
     }
+
+    
     
   } else {
     perror(argv[1]);
