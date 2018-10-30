@@ -8,3 +8,4 @@
 	global main
 main:	mov eax,j
 	add eax,h
+	mov eax,12
