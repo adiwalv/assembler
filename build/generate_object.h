@@ -73,7 +73,7 @@ void generateObjectFile(char *filename){
   for(; symtable[i].section != 'T'; i++) {
     sprintf(hex,"%08X",(unsigned int)symtable[i].address);
     sprintf(value,"%08X",(unsigned int)symtable[i].size);
-    fprintf(op,"%s  <res %s>\n", hex, value);
+    fprintf(op,"%s  <res%s>\n", hex, value);
   }
   
   fprintf(op,"\n\n");
@@ -238,6 +238,7 @@ void generateObjectFile(char *filename){
        sprintf(hex,"%08X",address);
        fprintf(op,"%s %s\n",hex,instruct);
     }
+    address+= 2;
   }
   fclose(op);
   fclose(ip);
