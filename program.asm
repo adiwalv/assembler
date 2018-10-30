@@ -9,3 +9,5 @@
 main:	mov eax,j
 	add eax,h
 	mov eax,12
+	mov eax,ecx
+	add ecx,12

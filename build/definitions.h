@@ -88,4 +88,16 @@ const char *modrm[8][8] = {
   {"C7","CF","D7","DF","E7","EF","F7","FF"}
   };
 
+int findInMod(char *mod,int i, int *j) {
+  for(i = 0 ; i < 8 ; i++) {
+    for(*j = 0 ; *j < 8 ; *j++) {
+      if(strcmp(modrm[i][*j],mod) == 0) {
+        return i;
+      }
+    }
+  }
+}
+
+
+
 #endif  //  BUILD_DEFINITIONS_H_

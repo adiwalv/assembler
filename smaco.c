@@ -205,8 +205,32 @@ int main(int argc, char *argv[]) {
             break;
         }
       }
+      if (inst[c][0] == '8') {
+        switch(inst[c][1]){
+          case '1':
+            value[0]=inst[c][2];
+            value[1]=inst[c][3];
+            value[2]='\0';
+            // printf("%s",value);
+            break;
+        }
+      }
+      if (inst[c][0] == '0'){
+        switch(inst[c][1]){
+          case '5':
+            if(inst[c][2] == '[') {
+              j = 0;
+              while(inst[c][j+3]!=']') {
+                value[j] = inst[c][j+3];
+                j++;
+              }
+              value[8] = '\0';
+              strcpy(value,inst[valueAt(add,count,value)]);
+              // printf("%s",value);
+            }}
+      }
     }
-
+    
     printf("\nValue of Registers: \n");
     printf("\neax = %s",eax);
     printf("\necx = %s",ecx);
