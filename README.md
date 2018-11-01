@@ -84,3 +84,13 @@ value of immediate are in little endian format
 # Modrm Table
 
 ![alt text](src/images/mod.png "Mod RM")
+
+# Smaco
+
+### This is yet not implemented fully... only some of mov and add instructions work.
+
+### To run
+
+```bash
+./smaco filename.o
+```
