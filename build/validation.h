@@ -39,6 +39,17 @@ void extractNumber(char **token1,char **token2, long *ret1, long *ret2, char **t
 
 }
 
+
+void extractNumber2(char **token1,char **type1, long *ret1) {
+  char *s = *token1; 
+  while (*s && !isdigit(*s)) s++; 
+  if (*s) {
+    sscanf(s, "%d", ret1); 
+  }
+  *type1 = substr(*token1,0,6);
+}
+
+
 void insertIntoSystab(int sym_table_index, char *name, int size, \
                       int no_of_items, char defined, char type, \
                       char *value, int address, \

@@ -61,11 +61,11 @@ value of immediate are in little endian format
 | mov ebp, symbol      	  | BD[address of symbol]      |
 | mov esi, symbol         | BE[address of symbol]      |
 | mov edi, symbol         | BF[address of symbol]      |
-| add eax, immediate     | 05 value of immediate      |
+| add eax, immediate     | 81modrm_with_eax value of immediate      |
 | add eax, symbol     | 05 [address of symbol]      |
-| add reg, symbol     | 81modrm_with_eax [address of immediate]      |
+| add reg, symbol     | 81modrm_with_eax [address of symbol]      |
 | add reg, reg      | 01 modrm      |
-| add reg, immediate     | 81modrm_with_eax [address of immediate]      |
+| add reg, immediate     | 81modrm_with_eax value of immediate      |
 | sub eax, immediate     | 2D value of immediate      |
 | sub eax, symbol     | 2D [address of symbol]      |
 | sub reg, symbol     | 83 modrm_with_eax [address of immediate]      |

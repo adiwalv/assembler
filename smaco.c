@@ -1,10 +1,6 @@
 // Author : Vikas Adiwal
 #include "build/generate_object.h"
-
-char eax[32],ecx[32],edx[32],ebx[32],esp[32],ebp[32],esi[32],edi[32];
 int flag[3]; //carry zero sign
-//memset(flag,0,3);
-
 
 int valueAt(char *add[],int count,char *value) {
   for(int i = 0 ; i < count ; i++) {
@@ -19,21 +15,31 @@ int main(int argc, char *argv[]) {
   char *add[100];
   char *inst[100];  
   token1 = (char*)malloc(sizeof(char)*100);
-  token2 = (char*)malloc(sizeof(char)*100);
+  token2 = (char*)malloc(sizeof(char)*100);  
+  char *eax = (char*)malloc(sizeof(char)*8);
+  char *ebx = (char*)malloc(sizeof(char)*8);
+  char *edx = (char*)malloc(sizeof(char)*8);
+  char *ecx = (char*)malloc(sizeof(char)*8);
+  char *ebp = (char*)malloc(sizeof(char)*8);
+  char *esp = (char*)malloc(sizeof(char)*8);
+  char *esi = (char*)malloc(sizeof(char)*8);
+  char *edi = (char*)malloc(sizeof(char)*8);
+  char *result = (char*)malloc(sizeof(char)*10);
   for(i=0;i<100;i++) {
     add[i]=malloc(sizeof(char)*100);
     inst[i]=malloc(sizeof(char)*100);
   }
   char pc[8];
   int count = 0;
-  
+
+    
   if (argc !=2) {
     printf("Specify a file.");
     exit(1);    
   }
   FILE *ip = fopen(argv[1],"r");
   if(ip != NULL) {
-
+    
     while(fgets(line, sizeof line, ip)!=NULL) {
       int num_matches = sscanf(line, "%s %s", token1, token2);
       if( num_matches == 2 ){
@@ -229,9 +235,38 @@ int main(int argc, char *argv[]) {
               // printf("%s",value);
             }}
       }
+       if (inst[c][0] == '7'){
+
+         if (inst[c][1] == '8'){
+            j = 0;
+              while(inst[c][j+2]!='\0'){
+                value[j] = inst[c][j+2];
+                j++;
+              }
+
+              value[8]= '\0';
+              eax = notLittleEndian(eax);
+              if (atoi(eax) == 4) {
+                printf(ANSI_COLOR_GREEN"Output of Write:"ANSI_COLOR_RESET"\n");
+                edx = notLittleEndian(edx);
+                ebx = notLittleEndian(ebx);
+                ecx = textFromHexString(ecx,result);
+                write(atoi(ebx),ecx,atoi(edx));
+                //                       printf("%d",lit_table_index);
+              }
+              else if (atoi(eax) == 1) {
+                ebx = notLittleEndian(ebx);
+                printf(ANSI_COLOR_RED"\n\nCalling exit(%d)!"ANSI_COLOR_RESET"\n",atoi(ebx));
+                exit(atoi(ebx));
+              }
+         }
+       }
     }
-    
-    printf("\nValue of Registers: \n");
+
+
+    printf(ANSI_COLOR_CYAN "\n\n==============================================="ANSI_COLOR_RESET"\n");
+    printf(ANSI_COLOR_CYAN"Value of Registers after execution of program:"ANSI_COLOR_RESET"\n");
+    printf(ANSI_COLOR_CYAN "==============================================="ANSI_COLOR_RESET"\n");
     printf("\neax = %s",eax);
     printf("\necx = %s",ecx);
     printf("\nedx = %s",edx);
@@ -246,20 +281,13 @@ int main(int argc, char *argv[]) {
   }
   free(token1);
   free(token2);
+  /**  free(eax);
+  free(ecx);
+  free(ebx);
+  free(edx);
+  free(esi);
+  free(edi);
+  free(esp);
+  free(ebp);**/
 }
 
-
-/**
-
-
-   
-      if( num_matches == 2 ){
-        strcpy(pc,token1);
-
-        if(strcmp(pc,"00000000") == 0) {
-          count++;
-        }
-        if(count == 2) {
-          break;                          
-        }
-**/

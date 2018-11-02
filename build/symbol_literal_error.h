@@ -76,6 +76,46 @@ char* makeLittleEndian(char *str){
   return str5;
 }
 
+char* notLittleEndian(char *str){
+  char* str5 = (char*)malloc(sizeof(char)*10);
+  memset(str5,0,10);
+  str5[0] = str[6];
+  str5[1] = str[7];
+  str5[2] = str[4];
+  str5[3] = str[5];
+  str5[4] = str[2];
+  str5[5] = str[3];
+  str5[6] = str[0];
+  str5[7] = str[1];
+  return str5;
+
+}
+
+
+char* aLittleEndian(char *str){
+  char* str5 = (char*)malloc(sizeof(char)*10);
+  memset(str5,0,10);
+  str5[0] = str[6];
+  str5[1] = str[7];
+  str5[2] = str[4];
+  str5[3] = str[5];
+  str5[4] = str[2];
+  str5[5] = str[3];
+  str5[6] = str[0];
+  str5[7] = str[1];
+  return str5;
+}
+
+
+char *find(char* string) {
+  for(int i = 0 ; i < lit_table_index; i++) {
+    if(strcmp(string,littab[i].value) == 0) {
+      return littab[i].original_value;
+    }
+  }
+}
+
+
 int populateLiteralTable(int sym_table_index, int lit_table_index){
   int index = 0 ;
   long array[200];

@@ -29,6 +29,28 @@ void getReg(int ret1,char **instruct) {
 }
 
 
+char *textFromHexString(char *hex,char *result)
+{
+  char text[20]={0};
+  int tc=0;
+  
+  for(int k=0;k<strlen(hex);k++)
+  {
+    if(k%2!=0)
+    {
+      char temp[3];
+      sprintf(temp,"%c%c",hex[k-1],hex[k]);
+      int number = (int)strtol(temp, NULL, 16);
+      text[tc]=(char)number;
+      
+      tc++;   
+      
+    }
+  }  
+  strcpy(result,text);
+  return result;
+}
+
 char *getDotFilename(char* mystr,char *ext) {
     char *retstr;
     char *lastdot;
@@ -85,6 +107,17 @@ void generateObjectFile(char *filename){
     memset(value,0,10);
  
     token = strtok(line,"\n\t\r ");
+    if(strcmp(token,"int") == 0){
+      token1 = strtok(NULL,"\n\t\r ,");
+      extractNumber2(&token1,&type1,&ret1);
+      if (strcmp(type1,"Littab") == 0) {
+        strcpy(instruct,"78");
+        strcat(instruct,littab[ret1].value);
+        sprintf(hex,"%08X",address);
+        fprintf(op,"%s %s\n",hex,instruct);
+        address+=2;
+      }
+    }
     if(strcmp(token,"mov") == 0){
       token1 = strtok(NULL,"\n\t\r ,");
       token2 = strtok(NULL,"\n\t\r ,");
